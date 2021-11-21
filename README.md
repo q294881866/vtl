@@ -21,9 +21,9 @@
   - [Test IOU](#test-iou)
   - [Test ViTHash](#test-vithash)
   - [Test CSQ](#test-csq)
-- [Tracing🚀️](#tracing%EF%B8%8F)
+- [🚀️Tracing](#%EF%B8%8Ftracing)
   - [Trace Samples](#trace-samples)
-- [Localization👀️](#localization%EF%B8%8F)
+- [👀️Localization](#%EF%B8%8Flocalization)
   - [Localization Samples](#localization-samples)
   
 ## ✨ Introduction
