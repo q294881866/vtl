@@ -1,25 +1,32 @@
+<h1 align="center">
+  VTL
+</h1>
 
-# VTL: Fake Video Tracing the Source and Localization Based on Vision Transformer🎉️
+<div align="center">
+🎉️🎉️🎉️ Fake Video Tracing the Source and Localization Based on Vision Transformer
+</div>
+
+## 📜 Directory
  
-  - [Introduction](#introduction)
-    - [DAVIS2016-TL](#davis2016-tl)
-    - [DFTL](#dftl)
-    - [Trace Samples and Acc of HashBits](#trace-samples-and-acc-of-hashbits)
-    - [DFTL Dataset Samples](#dftl-dataset-samples)
-    - [DAVIS2016-TL Dataset Samples](#davis2016-tl-dataset-samples)
-  - [Train or Test](#train-or-test)
-    - [Datasets Download](#datasets-download)
-    - [Train ViTHash](#train-vithash)
-    - [Train Generator](#train-generator)
-    - [Test IOU](#test-iou)
-    - [Test ViTHash](#test-vithash)
-    - [Test CSQ](#test-csq)
-  - [Tracing🚀️](#tracing%EF%B8%8F)
-    - [Trace Samples](#trace-samples)
-  - [Localization👀️](#localization%EF%B8%8F)
-    - [Localization Samples](#localization-samples)
+- [Introduction](#introduction)
+  - [DAVIS2016-TL](#davis2016-tl)
+  - [DFTL](#dftl)
+  - [Trace Samples and Acc of HashBits](#trace-samples-and-acc-of-hashbits)
+  - [DFTL Dataset Samples](#dftl-dataset-samples)
+  - [DAVIS2016-TL Dataset Samples](#davis2016-tl-dataset-samples)
+- [Train or Test](#train-or-test)
+  - [Datasets Download](#datasets-download)
+  - [Train ViTHash](#train-vithash)
+  - [Train Generator](#train-generator)
+  - [Test IOU](#test-iou)
+  - [Test ViTHash](#test-vithash)
+  - [Test CSQ](#test-csq)
+- [Tracing🚀️](#tracing%EF%B8%8F)
+  - [Trace Samples](#trace-samples)
+- [Localization👀️](#localization%EF%B8%8F)
+  - [Localization Samples](#localization-samples)
   
-## Introduction
+## ✨ Introduction
 
 Traditional fake video detect methods usually take advantage of high performance, which are output a possibility value
 or mask. However, the results of this possibility cannot be used as convincing evidence. We propose a solution namely
@@ -40,8 +47,8 @@ the video retrieval used in the fake video detection.
 ### Trace Samples and Acc of HashBits
 
 <div align="center">
-    <img src="./images/trace_dftl.png" height="220px" >
-    <img src="./images/acc.png" height="250px" >
+    <img src="./images/trace_dftl.png" height="230px" >
+    <img src="./images/acc.png" height="230px" >
 </div>
 
 ### DFTL Dataset Samples
@@ -84,7 +91,7 @@ the video retrieval used in the fake video detection.
     </div>  
 </div>
 
-## Train or Test
+## 🔬 Train or Test
 
 ### Datasets Download
 
@@ -156,7 +163,7 @@ python test.py 1 ../inpainting 512
 python hash_test_vrf.py --dataset=Inpainting --pretrained_3d=./Inpainting_64bits.pth
 ```
 
-## Tracing🚀️
+## 🚀️ Tracing
 
 ### Trace Samples
 
@@ -166,7 +173,7 @@ python hash_test_vrf.py --dataset=Inpainting --pretrained_3d=./Inpainting_64bits
     <img src="./images/trace_dftl-0.jpg" height="200px" >
 </div>
 
-## Localization👀️
+## 👀️ Localization
 
 ### Localization Samples
 
