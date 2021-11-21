@@ -3,27 +3,27 @@
 </h1>
 
 <div align="center">
-🎉️🎉️🎉️ Fake Video Tracing the Source and Localization Based on Vision Transformer
+Fake Video Tracing the Source and Localization Based on Vision Transformer
 </div>
 
 ## 📜 Directory
  
-- [Introduction](#introduction)
+- [Introduction](#-introduction)
   - [DAVIS2016-TL](#davis2016-tl)
   - [DFTL](#dftl)
   - [Trace Samples and Acc of HashBits](#trace-samples-and-acc-of-hashbits)
   - [DFTL Dataset Samples](#dftl-dataset-samples)
   - [DAVIS2016-TL Dataset Samples](#davis2016-tl-dataset-samples)
-- [Train or Test](#train-or-test)
+- [Train or Test](#-train-or-test)
   - [Datasets Download](#datasets-download)
   - [Train ViTHash](#train-vithash)
   - [Train Generator](#train-generator)
   - [Test IOU](#test-iou)
   - [Test ViTHash](#test-vithash)
   - [Test CSQ](#test-csq)
-- [🚀️Tracing](#%EF%B8%8Ftracing)
+- [Tracing](#%EF%B8%8F-tracing)
   - [Trace Samples](#trace-samples)
-- [👀️Localization](#%EF%B8%8Flocalization)
+- [Localization](#%EF%B8%8F-localization)
   - [Localization Samples](#localization-samples)
   
 ## ✨ Introduction
