@@ -28,10 +28,6 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
     <img src="./assets/flow-chart.png" width="720px" >
 </div>
 
-> Networks
-<div align="center">
-    <img src="./images/arch.png" width="720px" >
-</div>
 
 ### Trace Samples and Acc of HashBits
 
