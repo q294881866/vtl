@@ -9,8 +9,7 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
 ## 📜 Directory
  
 - [Introduction](#-introduction)
-  - [VTL](#vtl-:-video-tracing-and-tampering-localization)
-  - [Architecture](#architecture)
+  - [VTL](#vtl)
   - [Trace Samples and Acc of HashBits](#trace-samples-and-acc-of-hashbits)
   - [DFTL Dataset Samples](#dftl-dataset-samples)
   - [DAVIS2016-TL Dataset Samples](#davis2016-tl-dataset-samples)
@@ -27,14 +26,13 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
   - [Localization Samples](#localization-samples)
   
 ## ✨ Introduction
-### VTL : Video Tracing and Tampering Localization
-
+### VTL
+> Video Tracing and Tampering Localization (VTL). 
 <div align="center">
-    <img src="./assets/flow-chart.jpg" width="720px" >
+    <img src="./assets/flow-chart.png" width="720px" >
 </div>
 
-### Architecture
-
+> Networks
 <div align="center">
     <img src="./images/arch.png" width="720px" >
 </div>
