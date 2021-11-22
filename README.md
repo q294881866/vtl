@@ -1,10 +1,6 @@
 <h1 align="center">
-  VTL
-</h1>
-
-<div align="center">
 Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake Videos🎉️
-</div>
+</h1>
 
 ## 📜 Directory
  
@@ -27,7 +23,7 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
   
 ## ✨ Introduction
 ### VTL
-> Video Tracing and Tampering Localization (VTL). 
+> Video Tracing and Tampering Localization (VTL). A novel framework to detect fake video by tracing the source video of fake video. 1) Training hash centers as HCs. 2) Finding index of source video from HCs. 3) Masking the different between fake video and source video a result of comparison.
 <div align="center">
     <img src="./assets/flow-chart.png" width="720px" >
 </div>
