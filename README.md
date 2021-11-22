@@ -36,8 +36,8 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
 ### Trace Samples and Acc of HashBits
 
 <div align="center">
-    <img src="./images/trace_dftl.png" height="220px" >
-    <img src="./images/acc.png" height="250px" >
+    <img src="./images/trace_dftl.png" height="230px" >
+    <img src="./images/acc.png" height="230px" >
 </div>
 
 ### DFTL Dataset Samples
