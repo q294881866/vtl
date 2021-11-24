@@ -12,7 +12,7 @@ from dataset.dataset import get_dataloader
 from dataset.inpainting_dataset import get_inpainting_dataloader
 from dmac.test_dmac import get_dmac, test_dmac
 from layer import helper
-from layer.ConvTransGenerator import ConvTransGenerator
+from layer.conv_trans_generator import ConvTransGenerator
 from layer.helper import to_image
 from util.logUtil import logger
 

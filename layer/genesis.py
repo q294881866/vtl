@@ -9,7 +9,7 @@ from torch.nn.parallel import DistributedDataParallel
 
 import GlobalConfig
 from layer import helper
-from layer.ConvTransGenerator import ConvTransGenerator
+from layer.conv_trans_generator import ConvTransGenerator
 from layer.vit_hash import ViTHash
 from util.logUtil import logger
 

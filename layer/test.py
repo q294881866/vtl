@@ -5,7 +5,7 @@ import GlobalConfig
 import util.figureUtil
 from dataset.dataset import get_dataloader
 from layer import helper
-from layer.ConvTransGenerator import ConvTransGenerator
+from layer.conv_trans_generator import ConvTransGenerator
 from layer.genesis import ViTHash
 from util import figureUtil
 
