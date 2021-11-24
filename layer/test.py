@@ -6,17 +6,8 @@ import util.figureUtil
 from dataset.dataset import get_dataloader
 from layer import helper
 from layer.ConvTransGenerator import ConvTransGenerator
-from layer.genesis import HashNet
-from layer.model import Generator, TransGenerator
+from layer.genesis import ViTHash
 from util import figureUtil
-
-
-def test_generator():
-    f = torch.randn([2, GlobalConfig.NUM_FRAME * 3, 192])
-    model = Generator()
-    out = model(f)
-    util.figureUtil.merge_pic(out, out, './test.jpg')
-    print(out.shape)
 
 
 def test_trans_generator():
@@ -32,7 +23,7 @@ def test_trans_generator():
 def test_vrf():
     img = torch.randn([GlobalConfig.BATCH_SIZE, GlobalConfig.NUM_FRAME, 3, 224, 224]).cuda()
     label = np.random.randint(0, 2, GlobalConfig.BATCH_SIZE)
-    model = HashNet(224, 16, num_classes=8).cuda()
+    model = ViTHash(224, 16, num_classes=8).cuda()
     d, g, h = model(img)
     util.figureUtil.merge_pic(g, g, 'test.jpg')
     act_rate = helper.find_index(h, label)

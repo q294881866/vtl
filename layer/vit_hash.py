@@ -4,8 +4,7 @@ from einops import repeat, rearrange
 from einops.layers.torch import Rearrange
 
 import GlobalConfig
-import layer.helper
-from layer.block import Transformer, LinearBlock, LinearBn, Attention, Residual, UpperSample
+from layer.block import Transformer, LinearBn, Attention, Residual
 
 
 class FeatureNet(nn.Module):
@@ -95,49 +94,10 @@ class Discriminator(nn.Module):
         return x
 
 
-class Generator(nn.Module):
-    def __init__(self, dim=GlobalConfig.ALL_DIM, hidden_size=14, num_frames=GlobalConfig.NUM_FRAME,
-                 depth=4, in_channels=3):
-        super(Generator, self).__init__()
-        self.num_frames = num_frames
-        self.dim = dim
-        self.hidden_size = hidden_size
-        self.image_size = hidden_size * (2 ** depth)
-        self.l1 = nn.Sequential(
-            LinearBlock(hidden_size ** 2, hidden_size ** 2),
-            Rearrange('b t d n -> b n d t'),
-            LinearBlock(num_frames * in_channels, num_frames),
-            Rearrange('b n d t -> (b t) n d'),
-        )
-
-        # to image
-        self.upper_samples = nn.ModuleList([])
-        for i in range(depth):
-            self.upper_samples.append(
-                UpperSample(dim // (2 ** i), dim // (2 ** (i + 1)), hw=hidden_size * (2 ** i))
-            )
-        # to 1 channels
-        self.l2 = nn.Sequential(
-            Rearrange('(b t) (h w) -> b t h w', t=self.num_frames, h=self.image_size),
-            nn.Sigmoid()
-        )
-
-    def forward(self, x):
-        x = repeat(x, 'b t d -> b t d n', n=self.hidden_size ** 2)
-        x = self.l1(x)
-
-        for upper in self.upper_samples:
-            x = upper(x)
-
-        x = x.mean(-1)
-        x = self.l2(x)
-        return x
-
-
-class HashNet(nn.Module):
+class ViTHash(nn.Module):
     def __init__(self, image_size, patch_size, num_frames=GlobalConfig.NUM_FRAME, hash_bits=GlobalConfig.HASH_BIT,
                  dim=GlobalConfig.ALL_DIM, num_classes=1):
-        super(HashNet, self).__init__()
+        super(ViTHash, self).__init__()
         self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=6, heads=9)
         self.discriminate = Discriminator(dim, num_classes, out_act=nn.Softmax)
         self.hash_net = Discriminator(dim, hash_bits, out_act=nn.Tanh)
@@ -151,17 +111,3 @@ class HashNet(nn.Module):
         else:
             h = self.hash_net(x)
             return h
-
-
-class TransGenerator(nn.Module):
-    def __init__(self, image_size=224, patch_size=GlobalConfig.PATCH_SIZE, num_frames=GlobalConfig.NUM_FRAME):
-        super(TransGenerator, self).__init__()
-        self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=8, in_channels=3)
-        self.generate = Generator(in_channels=3)
-
-    def forward(self, x):
-        src = self.feature_exact(x[0])
-        fake = self.feature_exact(x[1])
-        x = src + fake
-        x = self.generate(x)
-        return x

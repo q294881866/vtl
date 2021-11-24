@@ -12,7 +12,7 @@ from dataset.inpainting_dataset import get_inpainting_dataloader
 from layer import helper
 from layer.ConvTransGenerator import ConvTransGenerator
 from layer.helper import tensor_to_binary, compute_hamming_dist, to_image
-from layer.model import HashNet
+from layer.vit_hash import ViTHash
 from train_g import load_label_classes
 from util.logUtil import logger
 
@@ -27,7 +27,7 @@ def test(data_type: int, path, test_op, hash_bits):
                                     batch_size=1,
                                     mode=GlobalConfig.TEST, test_op=test_op)
         num_classes = load_label_classes(os.path.join(path, GlobalConfig.TRAIN))
-        net_h = HashNet(224, GlobalConfig.PATCH_SIZE, num_classes=num_classes, hash_bits=hash_bits)
+        net_h = ViTHash(224, GlobalConfig.PATCH_SIZE, num_classes=num_classes, hash_bits=hash_bits)
         net_h.load_state_dict(torch.load('./model/human/' + str(hash_bits) + '_net_h.pth', map_location=device))
         load_map('./model/human/' + str(hash_bits) + '_hash.json')
         # generator
@@ -38,7 +38,7 @@ def test(data_type: int, path, test_op, hash_bits):
                                                batch_size=1,
                                                mode=GlobalConfig.TEST, test_op=test_op)
         num_classes = load_label_classes(os.path.join(path, GlobalConfig.TRAIN, 'src'))
-        net_h = HashNet(224, GlobalConfig.PATCH_SIZE, num_classes=num_classes, hash_bits=hash_bits)
+        net_h = ViTHash(224, GlobalConfig.PATCH_SIZE, num_classes=num_classes, hash_bits=hash_bits)
         net_h.load_state_dict(torch.load('./model/inpainting/' + str(hash_bits) + '_net_h.pth', map_location=device))
         load_map('./model/inpainting/' + str(hash_bits) + '_hash.json')
         # generator

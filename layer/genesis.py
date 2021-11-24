@@ -10,7 +10,7 @@ from torch.nn.parallel import DistributedDataParallel
 import GlobalConfig
 from layer import helper
 from layer.ConvTransGenerator import ConvTransGenerator
-from layer.model import HashNet
+from layer.vit_hash import ViTHash
 from util.logUtil import logger
 
 
@@ -25,7 +25,7 @@ class Genesis:
         self.device_ids = device_ids
         self.train_h = train_h
         if train_h:
-            self.h = HashNet(image_size, patch_size, num_classes=num_classes, hash_bits=hash_bits)
+            self.h = ViTHash(image_size, patch_size, num_classes=num_classes, hash_bits=hash_bits)
         else:
             self.g = ConvTransGenerator()
         self.base_lr = base_lr
