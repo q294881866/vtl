@@ -105,21 +105,27 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
 
 ## 🔬 Train or Test
 
-### Datasets
+### Datasets Download
 
-**Download**  [BaiduNetdisk](https://pan.baidu.com/s/1PPlDaB4qH2hcU9TQY_KGdA) code：VTLs
+[BaiduNetdisk](https://pan.baidu.com/s/1PPlDaB4qH2hcU9TQY_KGdA) code：VTLs
 
-* actors: Source videos and fake videos of 16minutes
-* DFTL: Dataset of DFTL
+* actors: Source videos and fake videos of full 16 minutes. You can use these videos to make richer datasets.
+* DFTL: Dataset of DFTL, the DFTL build from **actors**.
 * DAVIS2016-TL: Extension of [DAVIS2016](https://davischallenge.org/)
 
-Extract to the same directory of our code (vtl).
+Extract to the same directory as the code (vtl). Example:
 
-Example:
+```
+├─other files
+├─project
+│  ├─vrf: dataset of DFTL
+│  ├─inpainting: dataset of DAVIS2016-TL
+│  └─vtl: our code
+│      ├─CSQ: Central Similarity Quantization for Efficient Image and Video Retrieval
+│      ├─dmac: Compared method of Localization
+│      └─codes
+```
 
-* vtl: our code
-* vrf: dataset of DFTL
-* inpainting: dataset of DAVIS2016-TL
 
 ### Train
 
