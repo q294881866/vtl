@@ -28,11 +28,11 @@ def test(data_type: int, path, test_op, hash_bits):
                                     mode=GlobalConfig.TEST, test_op=test_op)
         num_classes = load_label_classes(os.path.join(path, GlobalConfig.TRAIN))
         net_h = ViTHash(224, GlobalConfig.PATCH_SIZE, num_classes=num_classes, hash_bits=hash_bits)
-        net_h.load_state_dict(torch.load('./model/human/' + str(hash_bits) + '_net_h.pth', map_location=device))
-        load_map('./model/human/' + str(hash_bits) + '_hash.json')
+        net_h.load_state_dict(torch.load('./model/deepfake/' + str(hash_bits) + '_net_h.pth', map_location=device))
+        load_map('./model/deepfake/' + str(hash_bits) + '_hash.json')
         # generator
         net_g = ConvTransGenerator()
-        net_g.load_state_dict(torch.load('./model/human/net_g.pth', map_location=device))
+        net_g.load_state_dict(torch.load('./model/deepfake/net_g.pth', map_location=device))
     else:
         dataloader = get_inpainting_dataloader(set_path=os.path.join(path, GlobalConfig.TEST),
                                                batch_size=1,
@@ -161,7 +161,7 @@ def merge_pic_test(g_tensor: Tensor, mask: Tensor, name):
     images.save(name)
 
 
-def human_dataset(set_path=r'/home/dell/soft/ppf/vrf/train'):
+def deepfake_dataset(set_path=r'/home/dell/soft/ppf/vrf/train'):
     items = sorted(os.listdir(set_path))
     images = None
     for i in range(121):
@@ -175,7 +175,7 @@ def human_dataset(set_path=r'/home/dell/soft/ppf/vrf/train'):
                 images = Image.new(img.mode, (224 * 11, 224 * 11))
             img = img.resize((224, 224))
             images.paste(img, box=((i % 11) * 224, (i // 11) * 224))
-    images.save('human.jpg')
+    images.save('deepfake.jpg')
 
 
 def inpainting_dataset(set_path=r'/home/dell/soft/ppf/inpainting/train'):

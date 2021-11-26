@@ -10,7 +10,7 @@ import GlobalConfig
 from dataset.dataset import TrainCache, load_cache, get_dataloader, TrainItem
 from dataset.inpainting_dataset import get_inpainting_dataloader
 from layer import helper
-from layer.fn import local_hash_loss
+from layer.fn import hash_triplet_loss
 from layer.genesis import Genesis
 from layer.helper import cb2b
 from util import figureUtil
@@ -101,7 +101,7 @@ def test_step(genesis: Genesis, idx, epoch, test_itr, device):
 def train_h(genesis: Genesis, train_data, label, device, idx):
     # train
     d, h = genesis.h(train_data)
-    h_loss = local_hash_loss(h, label, d)
+    h_loss = hash_triplet_loss(h, label, d)
     # d loss
     d_label = get_tensor_target(label).to(device)
     d_loss = bce_loss(d.flatten(), d_label.flatten())

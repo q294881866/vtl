@@ -119,31 +119,41 @@ Example:
 * vrf: dataset of DFTL
 * inpainting: dataset of DAVIS2016-TL
 
-### Train ViTHash
+### Train
+
+**Pretrained models and hash centers**
+
+> pip install -r requirements.txt
+
+
+| Model     | ModelDFTL                          | DAVIS2016-TL                         |
+| ----------- | ------------------------------------ | -------------------------------------- |
+| ViTHash   | [64-1024bits](./model/deepfake)    | [64-1024bits](./model/inpainting)    |
+| Generator | [link](./model/deepfake/net_g.pth) | [link](./model/inpainting/net_g.pth) |
+
+**Parameters**
 
 * local_rank: gpu id
 * path: dataset path
 * type: choice dataloader
   * 0: DFTL dataloader, dir name is **vrf**
   * 1: DAVIS2016-TL dataloader, dir name is **inpainting**
+
+**Train ViTHash**
 
 ```apache
 python train_h.py --local_rank=0 --path=../vrf --type=0 --bits=128
 ```
 
-### Train Generator
-
-* local_rank: gpu id
-* path: dataset path
-* type: choice dataloader
-  * 0: DFTL dataloader, dir name is **vrf**
-  * 1: DAVIS2016-TL dataloader, dir name is **inpainting**
+**Train Generator**
 
 ```apache
 python train_g.py --local_rank=0 --path=../vrf --type=0
 ```
 
-### Test IOU
+### Test
+
+**Test IOU**
 
 The test script will test Generator of VTL and DMAC together on DFTL and DAVIS2016-TL.
 You can modify it for yourself.
@@ -152,7 +162,7 @@ You can modify it for yourself.
 python test_iou.py
 ```
 
-### Test ViTHash
+**Test ViTHash**
 
 1. type: choice dataloader
    * 0: DFTL dataloader, dir name is **vrf**
@@ -164,7 +174,7 @@ python test_iou.py
 python test.py 1 ../inpainting 512
 ```
 
-### Test CSQ
+**Test CSQ**
 
 1. cd ./CSQ
 2. run test script
