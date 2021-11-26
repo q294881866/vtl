@@ -33,6 +33,8 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
 
 ### Trace Samples and Acc of HashBits
 
+> Although the source videos are very similar, we can accurately find the source videos of the fake video clips.
+
 <div align="center">
     <img src="./images/trace_dftl.png" height="230px" >
     <img src="./images/acc.png" height="230px" >
