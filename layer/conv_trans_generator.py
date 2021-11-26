@@ -4,8 +4,7 @@ from einops import repeat, rearrange
 from einops.layers.torch import Rearrange
 
 import GlobalConfig
-from layer.block import Transformer, Residual, LeFF, UpperSample, b16
-from util import figureUtil
+from layer.block import Transformer, Residual, LeFF, UpperSample, conv_blocks
 
 
 class ConvEncoder(nn.Module):
@@ -15,7 +14,7 @@ class ConvEncoder(nn.Module):
 
         self.to_conv_embedding = nn.Sequential(
             Rearrange('b t c h w -> (b t) c h w'),
-            b16(dim, nn.GELU, in_channels),
+            conv_blocks(dim, nn.GELU, in_channels),
             Rearrange('(b t) d h w -> b t (h w) d', t=num_frames)
         )
 

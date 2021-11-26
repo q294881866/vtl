@@ -144,38 +144,6 @@ class UpperSample(nn.Module):
         return x
 
 
-class LCAttention(nn.Module):
-    def __init__(self, dim, heads=8, dim_head=64, dropout=0.):
-        super().__init__()
-        inner_dim = dim_head * heads
-        project_out = not (heads == 1 and dim_head == dim)
-
-        self.heads = heads
-        self.scale = dim_head ** -0.5
-
-        self.to_qkv = nn.Linear(dim, inner_dim * 3, bias=False)
-
-        self.to_out = nn.Sequential(
-            nn.Linear(inner_dim, dim),
-            nn.Dropout(dropout)
-        ) if project_out else nn.Identity()
-
-    def forward(self, x):
-        b, n, _, h = *x.shape, self.heads
-        qkv = self.to_qkv(x).chunk(3, dim=-1)
-        q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h=h), qkv)
-        q = q[:, :, -1, :].unsqueeze(2)  # Only Lth element use as query
-
-        dots = einsum('b h i d, b h j d -> b h i j', q, k) * self.scale
-
-        attn = dots.softmax(dim=-1)
-
-        out = einsum('b h i j, b h j d -> b h i d', attn, v)
-        out = rearrange(out, 'b h n d -> b n (h d)')
-        out = self.to_out(out)
-        return out
-
-
 class Transformer(nn.Module):
     def __init__(self, dim, depth, heads, dim_head, mlp_dim, dropout=0.):
         super().__init__()
@@ -192,20 +160,6 @@ class Transformer(nn.Module):
             x = attn(x) + x
             x = ff(x) + x
         return self.norm(x)
-
-
-class LinearBlock(nn.Module):
-    def __init__(self, in_channels, out_channels, rate=2, norm=nn.LayerNorm):
-        super(LinearBlock, self).__init__()
-        self.fc = nn.Sequential(
-            nn.Linear(in_channels, in_channels * rate, bias=False),
-            nn.GELU(),
-            nn.Linear(in_channels * rate, out_channels, bias=False),
-            norm(out_channels)
-        )
-
-    def forward(self, x):
-        return self.fc(x)
 
 
 class LinearBn(nn.Sequential):
@@ -266,7 +220,7 @@ class Residual(torch.nn.Module):
             return x + self.m(x)
 
 
-def b16(n, activation=nn.GELU, in_channels=3):
+def conv_blocks(n, activation=nn.GELU, in_channels=3):
     return torch.nn.Sequential(
         nn.Conv2d(in_channels, n // 8, 3, 2, 1),
         nn.BatchNorm2d(n // 8),
