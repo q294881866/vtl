@@ -126,7 +126,7 @@ Example:
 > pip install -r requirements.txt
 
 
-| Model     | ModelDFTL                          | DAVIS2016-TL                         |
+| Model     | DFTL                               | DAVIS2016-TL                         |
 | ----------- | ------------------------------------ | -------------------------------------- |
 | ViTHash   | [64-1024bits](./model/deepfake)    | [64-1024bits](./model/inpainting)    |
 | Generator | [link](./model/deepfake/net_g.pth) | [link](./model/inpainting/net_g.pth) |
