@@ -126,7 +126,6 @@ Extract to the same directory as the code (vtl). Example:
 │      └─codes
 ```
 
-
 ### Train
 
 **Pretrained models and hash centers**
@@ -197,7 +196,6 @@ python hash_test_vrf.py --dataset=Inpainting --pretrained_3d=./Inpainting_64bits
 
 <div align="center">
     <img src="./images/trace-2016-2.jpg" height="200px" >
-    <img src="./images/trace_2016-1.jpg" height="200px" >
     <img src="./images/trace_dftl-0.jpg" height="200px" >
 </div>
 
