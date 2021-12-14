@@ -1,5 +1,5 @@
 <h1 align="center">
-Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake Videos🎉️
+Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake Videos
 </h1>
 
 ## 📜 Directory
