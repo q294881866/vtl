@@ -1,12 +1,12 @@
-import numpy as np
-import cv2
-import random
 import os
+
+import cv2
+import numpy as np
 
 p = r'/ssd1/data/ppf/h'
 
 
-class MeanStf:
+class CalMeanStf:
     def __init__(self):
         self.TOTAL = 0
         self.means = [0, 0, 0]
@@ -45,6 +45,6 @@ class MeanStf:
 
 
 if __name__ == '__main__':
-    x = MeanStf()
+    x = CalMeanStf()
     x.mean(p)
     x.print_mean(p)

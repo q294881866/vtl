@@ -1,44 +1,11 @@
 import os
-import random
 
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
-from mpl_toolkits.mplot3d import Axes3D
 from torch import Tensor
 
 from layer.helper import to_image
-
-x_ = [0, 1.1, 1.8, 3.1, 4.0]  # 数据点
-
-
-def draw_figure(title, p1, p2=None, name='Draw.jpg', scatter=None, x='x', y='y'):
-    plt.figure('Draw')
-    plt.xlabel(x)
-    plt.ylabel(y)
-    plt.title(title)
-    if scatter is not None:
-        plt.plot(p1, p2, scatter)
-    elif p2 is not None:
-        plt.plot(p1, p2)
-    else:
-        plt.plot(p1)  # plot绘制折线图
-
-    plt.draw()  # 显示绘图
-    plt.pause(5)  # 显示5秒
-    plt.savefig(name)  # 保存图象
-    plt.close()
-
-
-def draw3d(x, y, z, title, name):
-    plt.title(title)
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    ax.plot_surface(x, y, z, rstride=1, cstride=1, cmap='rainbow')
-    plt.draw()
-    plt.pause(10)
-    plt.savefig(name)
-    plt.close()
 
 
 def analyze_hash_dist(name, itr_times, hash_dists):
@@ -63,7 +30,7 @@ def analyze_loss(name, itr_times, h_losses, d_losses, accuracies):
     plt.xlabel('iteration times')
     plt.ylabel('loss rate')
     plt.draw()
-    plt.savefig(name)  # 保存图象
+    plt.savefig(name)
     plt.close()
 
 
@@ -102,16 +69,6 @@ def analyze_acc():
 
 
 def merge_pic(g_tensor: Tensor, mask: Tensor, name):
-    """
-    Save generate images all in one
-    Args:
-        mask: real mask
-        g_tensor: tensor
-        name: save name
-
-    Returns:
-
-    """
     b, t, h, w = g_tensor.shape
     g_tensor = g_tensor.detach().cpu()
     img = to_image(g_tensor[0][0])
@@ -124,48 +81,6 @@ def merge_pic(g_tensor: Tensor, mask: Tensor, name):
     if not os.path.exists(path):
         os.makedirs(path)
     images.save(name)
-
-
-def scatter_plot(r=35):
-    def circle(x, y, a, b):
-        return (x - a) ** 2 + (y - b) ** 2 < r ** 2
-
-    def rand_(x, y):
-        a_, b_, = 100, 100
-        while not circle(x, y, a_, b_):
-            a_ = x + random.randint(-r, r)
-            b_ = y + random.randint(-r, r)
-        return a_, b_
-
-    x1, y1 = [], []
-    x2, y2 = [], []
-    x3, y3 = [], []
-    for i in range(100):
-        a, b = rand_(50, 50)
-        x1.append(a)
-        y1.append(b)
-        a, b = rand_(50, 150)
-        y2.append(a)
-        x2.append(b)
-        a, b = rand_(150, 100)
-        y3.append(a)
-        x3.append(b)
-
-    plt.figure(2)
-    N = 100
-    area = np.pi * 4 ** 2
-    plt.scatter(x1, y1, marker='1', alpha=0.5, label='1', c=np.random.rand(N), s=area)
-    plt.scatter(x2, y2, marker='2', alpha=0.5, label='2', c=np.random.rand(N), s=area)
-    plt.scatter(x3, y3, marker='3', alpha=0.5, label='3', c=np.random.rand(N), s=area)
-    plt.scatter([50], [50], marker='1', s=[200], c='k')
-    plt.scatter([150], [50], marker='2', s=[200], c='k')
-    plt.scatter([100], [150], marker='3', s=[200], c='k')
-
-    plt.xticks(())
-    plt.yticks(())
-
-    plt.legend(loc='upper right')
-    plt.savefig('hash_dis.png')
 
 
 if __name__ == '__main__':

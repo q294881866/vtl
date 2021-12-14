@@ -38,14 +38,6 @@ def get_hash_json(hash_bit=get_hash_bits()):
 
 
 def gen_hash(hashset: []):
-    """
-    hash list to hash by select most common element
-    Args:
-        hashset: must be numpy array
-
-    Returns:
-
-    """
     arr = np.array(hashset)
     _hash = []
     for i in range(get_hash_bits()):
@@ -157,29 +149,12 @@ def tensor_to_binary(x: Tensor):
 
 
 def compute_hamming_dist(a, b):
-    """
-    Computes hamming distance vector wisely
-    Args:
-        a: row-ordered codes {0,1}
-        b: row-ordered codes {0,1}
-    Returns:
-    """
     a = np.asarray(a)
     b = np.asarray(b)
     return np.sum(np.abs(a - b))
 
 
 def find_index(hashset: Tensor, label: []):
-    """
-    Save generate images all in one
-    Args:
-        label: data label
-        hashset: generate hashcode
-        name: save name
-
-    Returns:
-
-    """
     hashset_ = tensor_to_binary(hashset)
     h_map = to_hashmap(hashset_, label)
     real_count = 0

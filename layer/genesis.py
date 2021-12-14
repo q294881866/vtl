@@ -18,12 +18,12 @@ class Genesis:
     def __init__(self, image_size, patch_size, rank, device_ids, base_lr=1e-4, num_classes=2, train_h=False,
                  hash_bits=GlobalConfig.HASH_BIT, data_type=0):
         # base
-        self.device = setup(rank)
         self.rank = rank
         self.data_type = data_type
         self.hash_bits = hash_bits
         self.device_ids = device_ids
         self.train_h = train_h
+        self.setup()
         if train_h:
             self.h = ViTHash(image_size, patch_size, num_classes=num_classes, hash_bits=hash_bits)
         else:
@@ -102,25 +102,20 @@ class Genesis:
         else:
             self.g.eval()
 
-
-def setup(rank):
-    USE_CUDA = torch.cuda.is_available()
-    random.seed(1)
-    np.random.seed(1)
-    torch.manual_seed(1)
-    if USE_CUDA:
-        torch.cuda.manual_seed(1)
-    if torch.cuda.device_count() > 1:
-        device = rank
-    elif GlobalConfig.IS_DISTRIBUTION:
-        os.environ['MASTER_ADDR'] = '127.0.0.1'
-        os.environ['MASTER_PORT'] = '12355'
-        # initialize the process group
-        dist.init_process_group("gloo", rank=rank, world_size=torch.cuda.device_count())
-    else:
-        device = torch.device("cuda" if USE_CUDA else "cpu")
-    return device
-
-
-def cleanup():
-    dist.destroy_process_group()
+    def setup(self):
+        rank = self.rank
+        USE_CUDA = torch.cuda.is_available()
+        random.seed(1)
+        np.random.seed(1)
+        torch.manual_seed(1)
+        if USE_CUDA:
+            torch.cuda.manual_seed(1)
+        if torch.cuda.device_count() > 1:
+            self.device = rank
+        elif GlobalConfig.IS_DISTRIBUTION:
+            os.environ['MASTER_ADDR'] = '127.0.0.1'
+            os.environ['MASTER_PORT'] = '12355'
+            # initialize the process group
+            dist.init_process_group("gloo", rank=rank, world_size=torch.cuda.device_count())
+        else:
+            self.device = torch.device("cuda" if USE_CUDA else "cpu")
