@@ -10,8 +10,8 @@ import GlobalConfig
 from dataset.dataset import get_dataloader
 from dataset.inpainting_dataset import get_inpainting_dataloader
 from layer import helper
-from layer.conv_trans_generator import ConvTransGenerator
 from layer.helper import tensor_to_binary, compute_hamming_dist, to_image
+from layer.localizator import ConvTransGenerator
 from layer.vit_hash import ViTHash
 from train_g import load_label_classes
 from util.logUtil import logger

@@ -77,10 +77,10 @@ def train(args_, dataloader_, test_loader_, num_classes, hash_bits):
 def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     # HashNet
     hashes = cb2b(item.hashes, device)
-    loss_h, loss_d, acc = train_h(genesis, hashes, item.label, device, idx)
+    loss_h, acc = train_h(genesis, hashes, item.label, device, idx)
     # epoch log
-    logger.info("Train Epoch:{}/{},H Loss:{:.5f},D Loss:{:.5f},hash dis:{:.5f} acc:{:.5f}".
-                format(epoch, idx, loss_h, loss_d, helper.hash_intra_dis(), acc))
+    logger.info("Train Epoch:{}/{},H Loss:{:.5f},hash dis:{:.5f} acc:{:.5f}".
+                format(epoch, idx, loss_h, helper.hash_intra_dis(), acc))
 
 
 def test_step(genesis: Genesis, idx, epoch, test_itr, device):
@@ -102,13 +102,9 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
     # train
     d, h = genesis.h(train_data)
     h_loss = hash_triplet_loss(h, label, d)
-    # d loss
-    d_label = get_tensor_target(label).to(device)
-    d_loss = bce_loss(d.flatten(), d_label.flatten())
-    d_h_loss = h_loss + d_loss
     # backward
     genesis.reset_grad()
-    d_h_loss.backward()
+    h_loss.backward()
     genesis.opt_h.step()
     # genesis.scheduler_h.step()
     # hashcode accuracy
@@ -116,10 +112,9 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
     if idx % 100 == 0:
         itr_times.append(idx)
         h_losses.append(round(h_loss.item(), 3))
-        d_losses.append(round(d_loss.item(), 3))
         accuracies.append(round(acc, 3))
         hash_dists.append(round(helper.hash_intra_dis(), 3))
-    return h_loss, d_loss, acc
+    return h_loss, acc
 
 
 parser = argparse.ArgumentParser()

@@ -5,8 +5,8 @@ import GlobalConfig
 import util.figureUtil
 from dataset.dataset import get_dataloader
 from layer import helper
-from layer.conv_trans_generator import ConvTransGenerator
 from layer.genesis import ViTHash
+from layer.localizator import ConvTransGenerator
 from util import figureUtil
 
 

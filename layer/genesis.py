@@ -9,7 +9,7 @@ from torch.nn.parallel import DistributedDataParallel
 
 import GlobalConfig
 from layer import helper
-from layer.conv_trans_generator import ConvTransGenerator
+from layer.localizator import ConvTransGenerator
 from layer.vit_hash import ViTHash
 from util.logUtil import logger
 
@@ -33,7 +33,7 @@ class Genesis:
         self.init()
 
     def init(self):
-        path = './model/inpainting/' if self.data_type == 1 else './model/human/'
+        path = './model/inpainting/' if self.data_type == 1 else './model/deepfake/'
         logger.info(f"will load:{path}")
         if self.train_h:
             path_net = path + str(self.hash_bits) + GlobalConfig.NET_H
