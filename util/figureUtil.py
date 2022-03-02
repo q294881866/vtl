@@ -1,4 +1,5 @@
 import os
+import random
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -83,5 +84,23 @@ def merge_pic(g_tensor: Tensor, mask: Tensor, name):
     images.save(name)
 
 
+def samples():
+    r = 50
+    xs, ys = [], []
+    for i in range(1000):
+        x = random.randint(-50, 50)
+        y = random.randint(-50, 50)
+        if x ** 2 + y ** 2 < 50 ** 2:
+            xs.append(x)
+            ys.append(y)
+    plt.scatter(xs, ys, s=2, facecolors='none', edgecolors='r')
+    plt.legend()
+
+    plt.draw()
+    plt.savefig('acc.png')  # 保存图象
+    plt.show()
+    plt.close()
+
+
 if __name__ == '__main__':
-    analyze_acc()
+    samples()
