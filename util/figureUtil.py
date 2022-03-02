@@ -86,14 +86,17 @@ def merge_pic(g_tensor: Tensor, mask: Tensor, name):
 
 def samples():
     r = 50
-    xs, ys = [], []
-    for i in range(1000):
-        x = random.randint(-50, 50)
-        y = random.randint(-50, 50)
-        if x ** 2 + y ** 2 < 50 ** 2:
+    xs, ys, cls = [], [], []
+    colors = ['navy', 'red', 'salmon', 'silver', 'orange',
+              'gold', 'greenyellow', 'teal', 'violet', 'hotpink']
+    for i in range(5000):
+        x = random.randint(-r, r)
+        y = random.randint(-r, r)
+        if x ** 2 + y ** 2 < (r + random.randint(0, r // 8)) ** 2:
             xs.append(x)
             ys.append(y)
-    plt.scatter(xs, ys, s=2, facecolors='none', edgecolors='r')
+            cls.append(colors[i % 10])
+    plt.scatter(xs, ys, 2, cls)
     plt.legend()
 
     plt.draw()
