@@ -84,19 +84,26 @@ def merge_pic(g_tensor: Tensor, mask: Tensor, name):
     images.save(name)
 
 
+colors = [
+    'navy', 'red', 'm', 'teal', 'seagreen',
+    'gold', 'c', 'hotpink', 'silver', 'orange',
+]
+xs, ys, zs, cls = [], [], [], []
+
+
 def samples():
-    r = 50
-    xs, ys, cls = [], [], []
-    colors = ['navy', 'red', 'salmon', 'silver', 'orange',
-              'gold', 'greenyellow', 'teal', 'violet', 'hotpink']
-    for i in range(5000):
+    r = 80
+
+    for i in range(500):
         x = random.randint(-r, r)
         y = random.randint(-r, r)
         if x ** 2 + y ** 2 < (r + random.randint(0, r // 8)) ** 2:
             xs.append(x)
             ys.append(y)
             cls.append(colors[i % 10])
-    plt.scatter(xs, ys, 2, cls)
+    plt.xticks([])
+    plt.yticks([])
+    plt.scatter(xs, ys, 40, cls, alpha=0.4, )
     plt.legend()
 
     plt.draw()
@@ -105,5 +112,66 @@ def samples():
     plt.close()
 
 
+def samples1():
+    r = 20
+    dots = [
+        (-10, 40), (-40, 10), (-45, -18), (-25, -30), (-6, -42),
+        (24, -20), (0, 0), (30, 13), (15, 35), (-20, 30),
+    ]
+    i = -1
+    for r_x, r_y in dots:
+        i += 1
+        for j in range(80):
+            x = random.randint(-r, r)
+            y = random.randint(-r, r)
+            if x ** 2 + y ** 2 < (r + random.randint(0, r // 8)) ** 2:
+                xs.append(x + r_x)
+                ys.append(y + r_y)
+                cls.append(colors[i])
+    plt.scatter(xs, ys, 20, cls, alpha=0.4, )
+    plt.legend()
+
+    plt.draw()
+    plt.savefig('acc.png')  # 保存图象
+    plt.show()
+    plt.close()
+
+
+def samples2():
+    r = 100
+    fig = plt.figure(figsize=(12, 8), facecolor='lightyellow')
+    ax = fig.gca( projection='3d')
+
+    ax.set_axis_off()
+    xs_ = np.array([2, 0, 2, 2, 2, 0, 2]) * r
+    ys_ = np.array([0, 2, 2, 0, 2, 2, 2]) * r
+    zs_ = np.array([2, 2, 2, 2, 0, 2, 2]) * r
+    ax.plot3D(xs_, ys_, zs_, ls=':', color='black', marker='o', mfc='black', ms=12, )
+
+    xs_ = np.array([2, 0, 0, 0, 2, 0, 2]) * r
+    ys_ = np.array([0, 0, 2, 0, 2, 0, 2]) * r
+    zs_ = np.array([2, 0, 2, 0, 2, 0, 0]) * r
+    ax.plot(xs_, ys_, zs_, ls=':', color='black', marker='o', mfc='black', ms=12, )
+    ax.view_init(elev=15, azim=40)
+
+    dots = np.array([(0, 0, 0), (2, 0, 2), (0, 2, 2), (2, 2, 2), (2, 2, 0)]) * r
+    i = -1
+    for r_x, r_y, r_z in dots:
+        i += 1
+        for j in range(100):
+            x = random.randint(-r, r) // 2
+            y = random.randint(-r, r) // 2
+            z = random.randint(-r, r) // 2
+            if x ** 2 + y ** 2 + z ** 2 < (r // 2) ** 2:
+                xs.append(x + r_x)
+                ys.append(y + r_y)
+                zs.append(z + r_z)
+                cls.append(colors[i])
+    ax.scatter(xs, ys, zs, s=20, c=cls, alpha=0.5, )
+    plt.savefig('acc.png')  # 保存图象
+
+    plt.show()
+
+
 if __name__ == '__main__':
-    samples()
+    samples2()
