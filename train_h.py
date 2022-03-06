@@ -141,5 +141,5 @@ if __name__ == '__main__':
     if args_.type == 'DFTL':
         num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN))
     elif args_.type == 'Davis2016':
-        num_classes = load_label_classes(os.path.join(args_.path, GlobalConfig.TRAIN, 'src'))
+        num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN, 'src'))
     train(cfg, dataloader, test_loader)
