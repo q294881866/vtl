@@ -6,9 +6,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-import GlobalConfig
-from dataset.dataset import TrainCache, load_cache, get_dataloader, TrainItem
-from dataset.inpainting_dataset import get_inpainting_dataloader
+from config import DFTLConfig, Davis2016Config, FFConfig, BaseConfig
+from dataset.Base import TrainCache, load_cache, TrainItem, get_dataloader
+from dataset.DFTL import DFTLDataset
+from dataset.Davis2016TL import Davis2016Dataset
+from dataset.faceforensics import FFDataset
 from layer import helper
 from layer.fn import hash_triplet_loss
 from layer.genesis import Genesis
@@ -20,6 +22,11 @@ from util.logUtil import logger
 label_set = {}
 bce_loss = nn.BCELoss(reduction='mean')
 itr_times, g_losses, h_losses, d_losses, h_d_losses, accuracies, hash_dists = [], [], [], [], [], [], []
+choices = {
+    'DFTL': (DFTLDataset, DFTLConfig),
+    'Davis2016': (Davis2016Dataset, Davis2016Config),
+    'FF': (FFDataset, FFConfig),
+}
 
 
 def load_label_classes(data_path):
@@ -44,25 +51,20 @@ def get_tensor_target(labels: []):
     return torch.from_numpy(x)
 
 
-def train(args_, dataloader_, test_loader_, num_classes, hash_bits):
+def train(cfg: BaseConfig, dataloader_, test_loader_):
     # init
-    genesis = Genesis(224, GlobalConfig.PATCH_SIZE, args_.local_rank, [args_.local_rank],
-                      num_classes=num_classes,
-                      hash_bits=hash_bits,
-                      data_type=args_.type,
-                      train_h=True)
+    genesis = Genesis(cfg, train_h=True)
     device = genesis.device
 
     # running
     test_itr = enumerate(test_loader_)
-    idx = GlobalConfig.CHECKPOINT
-    for epoch in range(1000):
+    for epoch in range(cfg.EPOCH):
         train_cache = TrainCache(size=16)
         _thread.start_new_thread(load_cache, (dataloader_, train_cache,))
         while not train_cache.finished:
             if train_cache.has_item():
                 try:
-                    _, item = train_cache.next_data()
+                    idx, item = train_cache.next_data()
                     train_step(genesis, item, idx, epoch, device)
                     test_step(genesis, idx, epoch, test_itr, device)
                 except Exception as e:
@@ -94,7 +96,7 @@ def test_step(genesis: Genesis, idx, epoch, test_itr, device):
         # epoch log
         logger.info("Test :{}/{}, acc:{:.5f}".format(epoch, idx, acc))
         genesis.save('model/{}_{}_'.format(epoch, idx))
-        helper.save_hash('model/{}_{}_'.format(epoch, idx), genesis.hash_bits)
+        helper.save_hash('model/{}_{}_'.format(epoch, idx), genesis.cfg.HASH_BITS)
         genesis.train()
 
 
@@ -120,23 +122,24 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
 parser = argparse.ArgumentParser()
 parser.add_argument('--path', type=str, default=r'Y:\vrf_')
 parser.add_argument('--local_rank', type=int, default=0)
-parser.add_argument('--type', type=int, default=0)
-parser.add_argument('--bits', type=int, default=GlobalConfig.HASH_BIT)
+parser.add_argument('--type', type=str, default='DFTL')
+parser.add_argument('--bits', type=int, default=512)
 if __name__ == '__main__':
-    args = parser.parse_args()
-    print('args:{}'.format(args))
-    helper.set_hash_bits(args.bits)
-    dataloader, test_loader, num_classes = None, None, 0
-    if args.type == 0:
-        dataloader = get_dataloader(set_path=os.path.join(args.path, GlobalConfig.TRAIN))
-        test_loader = get_dataloader(mode=GlobalConfig.TEST,
-                                     set_path=os.path.join(args.path, GlobalConfig.TEST),
-                                     num_workers=0)
-        num_classes = load_label_classes(os.path.join(args.path, GlobalConfig.TRAIN))
-    elif args.type == 1:
-        dataloader = get_inpainting_dataloader(set_path=os.path.join(args.path, GlobalConfig.TRAIN))
-        test_loader = get_inpainting_dataloader(mode=GlobalConfig.TEST,
-                                                set_path=os.path.join(args.path, GlobalConfig.TEST),
-                                                num_workers=0)
-        num_classes = load_label_classes(os.path.join(args.path, GlobalConfig.TRAIN, 'src'))
-    train(args, dataloader, test_loader, num_classes, args.bits)
+    args_ = parser.parse_args()
+    print('args:{}'.format(args_))
+    helper.set_hash_bits(args_.bits)
+    Dataset, cfg = choices[args_.type]
+    train_cfg = cfg(cfg.TRAIN, os.path.join(args_.path, cfg.TRAIN), args_.path, args_.local_rank)
+    dataset = Dataset(cfg=train_cfg)
+    dataloader = get_dataloader(dataset=dataset, cfg=train_cfg)
+    cfg.SET_PATH = os.path.join(args_.set_path, cfg.TEST)
+    cfg.mode = cfg.TEST
+    test_cfg = cfg(cfg.TEST, os.path.join(args_.set_path, cfg.TEST), args_.path, args_.local_rank)
+    dataset = Dataset(cfg=test_cfg)
+    test_loader = get_dataloader(dataset=dataset, cfg=test_cfg)
+
+    if args_.type == 'DFTL':
+        num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN))
+    elif args_.type == 'Davis2016':
+        num_classes = load_label_classes(os.path.join(args_.path, GlobalConfig.TRAIN, 'src'))
+    train(cfg, dataloader, test_loader)

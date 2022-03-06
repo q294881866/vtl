@@ -2,17 +2,43 @@ import os
 import random
 
 import torch
+from torch.utils import data as tud
 
-from dataset.Base import BaseVideoDataset, DataItem, BaseTrainItem
+from config import BaseConfig
+from dataset.Base import BaseVideoDataset
+from dataset.DFTL import DataItem
 
 
-class FFDataset(BaseVideoDataset):
+class Davis2016Dataset(BaseVideoDataset):
     def __init__(self, cfg):
         super().__init__(cfg=cfg)
 
+    def _load_data(self):
+        start = 0
+        item_path = os.path.abspath(self.set_path)
+        if os.path.isdir(item_path):
+            src_dir = os.path.join(item_path, 'src')
+            fake_dir = os.path.join(item_path, 'fake')
+            mask_dir = os.path.join(item_path, 'mask')
+            listdir = sorted(os.listdir(src_dir))
+            fake_list = sorted(os.listdir(fake_dir))
+            print(fake_list)
+            for _f in listdir:
+                label = _f
+                mask = os.path.join(mask_dir, _f)
+                src = os.path.join(src_dir, _f)
+                fakes = []
+                for fake_ in fake_list:
+                    fake = os.path.join(fake_dir, fake_, _f)
+                    fakes.append(fake)
+                data_item = DataItem(src, fakes, mask, label, start)
+                start = data_item.end
+                self.data.append(data_item)
+        self.length = start // self.batch_size
+
     def __getitem__(self, index):
         files, video_data = self.getitem(index)
-        if self.mode == GlobalConfig.TRAIN:
+        if self.mode == BaseConfig.TRAIN:
             video_data: DataItem = video_data
             i = random.randint(-3, 100)
             src = self.read_data(video_data.src_dir, files, op=i)
@@ -40,26 +66,3 @@ class FFDataset(BaseVideoDataset):
                 fake = self.read_data(fake_dir, files)
                 fakes.append(fake)
             return video_data.label, src_files, fake_files, src, fakes, mask_
-
-    def _load_data(self):
-        start = 0
-        item_path = self.cfg.set_path
-        if os.path.isdir(item_path):
-            src_dir = os.path.join(item_path, 'src')
-            fake_dir = os.path.join(item_path, 'fake')
-            mask_dir = os.path.join(item_path, 'mask')
-            for item in os.listdir(src_dir):
-                listdir = sorted(os.listdir(fake_dir))
-                src = os.path.join(src_dir, item)
-                label = item
-                for cls in listdir:
-                    mask = os.path.join(mask_dir, cls, item)
-                    fake_compress = os.path.join(fake_dir, cls)
-                    fake_dirs = []
-                    for fake_c in os.listdir(fake_compress):
-                        fake = os.path.join(fake_compress, fake_c, item)
-                        fake_dirs.append(fake)
-                    data_item = DataItem(src, label, start, mask, fake_dirs)
-                    start = data_item.end
-                    self.data.append(data_item)
-        self.count(start)

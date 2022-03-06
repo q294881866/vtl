@@ -8,8 +8,8 @@ from einops import rearrange
 from torch import Tensor
 
 import GlobalConfig
-from dataset.dataset import get_dataloader
-from dataset.inpainting_dataset import get_inpainting_dataloader
+from dataset.DFTL import get_dataloader
+from dataset.Davis2016TL import get_inpainting_dataloader
 from dmac.test_dmac import get_dmac, test_dmac
 from layer import helper
 from layer.helper import to_image

@@ -6,7 +6,7 @@ from abc import ABCMeta
 import numpy as np
 import torch
 from PIL import Image, ImageFilter
-from network.helper import tensor_resize, tensor2img
+from layer.helper import tensor_resize, tensor2img
 from torch.utils import data as tud
 from torch.utils.data import Dataset
 
@@ -169,6 +169,16 @@ def to_mask_tensor(img, image_size=224):
             if img[h, w] > 120:
                 mask[h, w] = 1.0
     return torch.unsqueeze(mask, 0)
+
+
+class TrainItem:
+    def __init__(self, label, hashes, src, fake, masks):
+        super(TrainItem, self).__init__()
+        self.label = label
+        self.hashes = hashes
+        self.src = src
+        self.fake = fake
+        self.masks = masks
 
 
 if __name__ == '__main__':

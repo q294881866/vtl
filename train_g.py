@@ -7,8 +7,8 @@ import torch
 import torch.nn as nn
 
 import GlobalConfig
-from dataset.dataset import TrainCache, load_cache, get_dataloader, TrainItem
-from dataset.inpainting_dataset import get_inpainting_dataloader
+from dataset.DFTL import TrainCache, load_cache, get_dataloader, TrainItem
+from dataset.Davis2016TL import get_inpainting_dataloader
 from layer import fn
 from layer.genesis import Genesis
 from layer.helper import cb2b

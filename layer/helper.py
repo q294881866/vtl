@@ -3,6 +3,7 @@ import os
 import time
 from collections import Counter
 from datetime import datetime
+from torch.nn import functional as F
 
 import numpy as np
 import torch
@@ -14,8 +15,6 @@ import GlobalConfig
 
 loader = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.565, 0.556, 0.547],
-                         std=[0.232, 0.233, 0.234])
 ])
 unloader = transforms.ToPILImage()
 hashmap = {}
@@ -31,6 +30,13 @@ def get_hash_bits():
 
 def get_net_h(hash_bit=get_hash_bits()):
     return str(hash_bit) + '_net_h.pth'
+
+
+def tensor2img(image, path=None):
+    image = unloader(image)
+    if path:
+        image.save(path)
+    return image
 
 
 def get_hash_json(hash_bit=get_hash_bits()):
@@ -186,3 +192,18 @@ def to_hashmap(hashset: Tensor, label):
 
 def cb2b(x: Tensor, device):
     return rearrange(x, 'c b ... -> (c b) ...').to(device)
+
+
+def torch_resize(image, size=224):
+    image = img2tensor(image).unsqueeze(0)
+    image = F.interpolate(image, size=size, mode='bilinear', align_corners=True)
+    return image
+
+
+def tensor_resize(image, size=224):
+    image = F.interpolate(image, size=size, mode='bilinear', align_corners=True)
+    return image
+
+
+def img2tensor(img):
+    return loader(img)
