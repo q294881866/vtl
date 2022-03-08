@@ -129,10 +129,12 @@ if __name__ == '__main__':
     print('args:{}'.format(args_))
     helper.set_hash_bits(args_.bits)
     Dataset, cfg = choices[args_.type]
+
     train_cfg = cfg(cfg.TRAIN, os.path.join(args_.path, cfg.TRAIN), args_.path, args_.local_rank)
     dataset = Dataset(cfg=train_cfg)
     dataloader = get_dataloader(dataset=dataset, cfg=train_cfg)
-    test_cfg = cfg(cfg.TEST, os.path.join(args_.set_path, cfg.TEST), args_.path, args_.local_rank)
+
+    test_cfg = cfg(cfg.TEST, os.path.join(args_.path, cfg.TEST), args_.path, args_.local_rank)
     dataset = Dataset(cfg=test_cfg)
     test_loader = get_dataloader(dataset=dataset, cfg=test_cfg)
 
