@@ -88,4 +88,4 @@ class DFTLDataset(BaseVideoDataset):
             mask_ = self.read_data(video_data.mask_dir, files, mask=True)
             src = self.read_data(video_data.src_dir, files)
             fake = self.read_data(video_data.fake_dir, files)
-            return video_data.label, src_files, fake_files, src, fake, mask_
+            return video_data.label, [src_files, fake_files, src, fake], mask_

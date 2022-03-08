@@ -64,16 +64,12 @@ def train(cfg: BaseConfig, dataloader_, test_loader_):
         while not train_cache.finished:
             if train_cache.has_item():
                 try:
-                    idx, item = train_cache.next_data()
-                    train_step(genesis, item, idx, epoch, device)
-                    test_step(genesis, idx, epoch, test_itr, device)
+                    item = train_cache.next_data()
+                    train_step(genesis, item, item.idx, epoch, device)
+                    test_step(genesis, item.idx, epoch, test_itr, device)
                 except Exception as e:
                     print(e)
                     test_itr = enumerate(test_loader_)
-                idx += 1
-        path = './images/' + str(epoch)
-        figureUtil.analyze_loss(path + '_loss.jpg', itr_times, h_losses, d_losses, accuracies)
-        figureUtil.analyze_hash_dist(path + '_acc.jpg', itr_times, hash_dists)
 
 
 def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
@@ -88,9 +84,9 @@ def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
 def test_step(genesis: Genesis, idx, epoch, test_itr, device):
     if idx % 100 == 0:
         genesis.eval()
-        _, (label, _, _, _, sources, fakes, masks) = test_itr.__next__()
+        _, (label, datas, masks) = test_itr.__next__()
         # HashNet
-        fakes = cb2b(fakes, device)
+        fakes = cb2b(datas[3], device)
         h = genesis.h(fakes)
         acc = helper.find_index(h, label)
         # epoch log
@@ -111,11 +107,6 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
     # genesis.scheduler_h.step()
     # hashcode accuracy
     acc = helper.find_index(h, label)
-    if idx % 100 == 0:
-        itr_times.append(idx)
-        h_losses.append(round(h_loss.item(), 3))
-        accuracies.append(round(acc, 3))
-        hash_dists.append(round(helper.hash_intra_dis(), 3))
     return h_loss, acc
 
 

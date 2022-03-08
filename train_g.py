@@ -71,7 +71,7 @@ def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     # HashNet
     src = cb2b(item.src, device)
     fake = cb2b(item.fake, device)
-    masks = cb2b(item.masks, device)
+    masks = cb2b(item.mask, device)
     loss_g, g = train_g(genesis, [src, fake], masks, idx)
     # epoch log
     logger.info("Train Epoch:{}/{},G Loss:{:.5f}".format(epoch, idx, loss_g))

@@ -171,14 +171,12 @@ def to_mask_tensor(img, image_size=224):
     return torch.unsqueeze(mask, 0)
 
 
-class TrainItem:
-    def __init__(self, label, hashes, src, fake, masks):
+class TrainItem(BaseTrainItem):
+    def __init__(self, label, hashes, mask):
         super(TrainItem, self).__init__()
         self.label = label
         self.hashes = hashes
-        self.src = src
-        self.fake = fake
-        self.masks = masks
+        self.mask = mask
 
 
 if __name__ == '__main__':

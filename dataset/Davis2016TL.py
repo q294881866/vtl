@@ -65,4 +65,4 @@ class Davis2016Dataset(BaseVideoDataset):
             for fake_dir in video_data.fake_dir:
                 fake = self.read_data(fake_dir, files)
                 fakes.append(fake)
-            return video_data.label, src_files, fake_files, src, fakes, mask_
+            return video_data.label, [src_files, fake_files, src, fakes], mask_
