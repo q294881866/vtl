@@ -25,7 +25,7 @@ class Genesis:
         else:
             self.g = ConvTransGenerator()
         self._optimizer()
-        self.init()
+        self.init(cfg.pretrained)
 
     def init(self, path):
         logger.info(f"will load:{path}")

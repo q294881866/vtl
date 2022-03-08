@@ -22,6 +22,7 @@ class BaseConfig:
     IS_DISTRIBUTION = False
     denormalize = None
     HASH_BITS = 512
+    pretrained = ''
 
     mean = [0.565, 0.556, 0.547]
     std = [0.232, 0.233, 0.234]
