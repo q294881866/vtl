@@ -44,6 +44,7 @@ class DFTLConfig(BaseConfig):
 class FFConfig(BaseConfig):
     NUM_FRAMES = 8
     FRAMES_STEP = NUM_FRAMES // 2
+    choice_idx = 0
 
 
 class Davis2016Config(BaseConfig):

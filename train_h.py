@@ -10,7 +10,7 @@ from config import DFTLConfig, Davis2016Config, FFConfig, BaseConfig
 from dataset.Base import TrainCache, load_cache, TrainItem, get_dataloader
 from dataset.DFTL import DFTLDataset
 from dataset.Davis2016TL import Davis2016Dataset
-from dataset.faceforensics import FFDataset
+from dataset.faceforensics_one import FFDataset
 from layer import helper
 from layer.fn import hash_triplet_loss
 from layer.genesis import Genesis
