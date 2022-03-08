@@ -1,9 +1,7 @@
 import numpy as np
 import torch
 
-import GlobalConfig
 import util.figureUtil
-from dataset.DFTL import get_dataloader
 from layer import helper
 from layer.genesis import ViTHash
 from layer.localizator import ConvTransGenerator

@@ -3,12 +3,12 @@ import torch.nn as nn
 from einops import repeat, rearrange
 from einops.layers.torch import Rearrange
 
-import GlobalConfig
+from config import BaseConfig
 from layer.block import Transformer, Residual, LeFF, UpperSample, conv_blocks
 
 
 class ConvEncoder(nn.Module):
-    def __init__(self, num_frames=GlobalConfig.NUM_FRAME, in_channels=3,
+    def __init__(self, num_frames=BaseConfig.NUM_FRAMES, in_channels=3,
                  hidden_size=14, dim=192, depth=8, heads=6, dim_head=64, dropout=0., scale_dim=4, ):
         super(ConvEncoder, self).__init__()
 
@@ -41,7 +41,7 @@ class ConvEncoder(nn.Module):
 
 
 class ConvDecoder(nn.Module):
-    def __init__(self, image_size=224, num_frames=GlobalConfig.NUM_FRAME,
+    def __init__(self, image_size=224, num_frames=BaseConfig.NUM_FRAMES,
                  hidden_size=14, dim=192, depth=8, heads=6, dim_head=64, dropout=0., scale_dim=4, ):
         super(ConvDecoder, self).__init__()
         self.image_size = image_size

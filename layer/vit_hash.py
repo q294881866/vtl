@@ -3,7 +3,8 @@ import torch.nn as nn
 from einops import repeat, rearrange
 from einops.layers.torch import Rearrange
 
-import GlobalConfig
+
+from config import BaseConfig
 from layer.block import Transformer, LinearBn, Attention, Residual
 
 
@@ -95,7 +96,7 @@ class Discriminator(nn.Module):
 
 
 class ViTHash(nn.Module):
-    def __init__(self, image_size, patch_size, num_frames=GlobalConfig.NUM_FRAME, hash_bits=GlobalConfig.HASH_BIT,
+    def __init__(self, image_size, patch_size, num_frames=BaseConfig.NUM_FRAMES, hash_bits=BaseConfig.HASH_BITS,
                  dim=GlobalConfig.ALL_DIM, num_classes=1):
         super(ViTHash, self).__init__()
         self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=6, heads=9)
