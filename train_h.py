@@ -122,7 +122,7 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
 parser = argparse.ArgumentParser()
 parser.add_argument('--path', type=str, default=r'Y:\vrf_')
 parser.add_argument('--local_rank', type=int, default=0)
-parser.add_argument('--type', type=str, default='DFTL')
+parser.add_argument('--type', type=str, default='FF')
 parser.add_argument('--bits', type=int, default=512)
 if __name__ == '__main__':
     args_ = parser.parse_args()
@@ -132,7 +132,6 @@ if __name__ == '__main__':
     train_cfg = cfg(cfg.TRAIN, os.path.join(args_.path, cfg.TRAIN), args_.path, args_.local_rank)
     dataset = Dataset(cfg=train_cfg)
     dataloader = get_dataloader(dataset=dataset, cfg=train_cfg)
-    cfg.SET_PATH = os.path.join(args_.set_path, cfg.TEST)
     cfg.mode = cfg.TEST
     test_cfg = cfg(cfg.TEST, os.path.join(args_.set_path, cfg.TEST), args_.path, args_.local_rank)
     dataset = Dataset(cfg=test_cfg)
