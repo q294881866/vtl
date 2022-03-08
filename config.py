@@ -41,13 +41,22 @@ class DFTLConfig(BaseConfig):
     NUM_FRAMES = 8
     FRAMES_STEP = NUM_FRAMES // 2
 
+    def __init__(self, mode, set_path, checkpoint, rank):
+        super().__init__(mode, set_path, checkpoint, rank)
+
 
 class FFConfig(BaseConfig):
     NUM_FRAMES = 8
     FRAMES_STEP = NUM_FRAMES // 2
     choice_idx = 0
 
+    def __init__(self, mode, set_path, checkpoint, rank):
+        super().__init__(mode, set_path, checkpoint, rank)
+
 
 class Davis2016Config(BaseConfig):
     NUM_FRAMES = 6
     FRAMES_STEP = 1
+
+    def __init__(self, mode, set_path, checkpoint, rank):
+        super().__init__(mode, set_path, checkpoint, rank)
