@@ -11,7 +11,6 @@ from einops import rearrange
 from torch import Tensor
 from torchvision.transforms import transforms
 
-import GlobalConfig
 
 loader = transforms.Compose([
     transforms.ToTensor(),
