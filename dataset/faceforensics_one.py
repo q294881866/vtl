@@ -9,9 +9,9 @@ from dataset.Base import BaseVideoDataset, DataItem, BaseTrainItem
 listdir = ['face2face', 'faceshifter', 'faceswap', 'deepfakes', 'neuraltextures']
 
 
-class FFDataset(BaseVideoDataset):
+class FF1Dataset(BaseVideoDataset):
     def __init__(self, cfg):
-        super().__init__(cfg=FFConfig)
+        super().__init__(cfg=cfg)
 
     def __getitem__(self, index):
         files, video_data = self.getitem(index)
