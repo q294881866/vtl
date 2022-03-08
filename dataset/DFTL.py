@@ -8,7 +8,6 @@ from PIL import Image as Image, ImageFilter
 from torch.utils import data as tud
 from torch.utils.data import Dataset
 
-import GlobalConfig
 from dataset.Base import BaseVideoDataset
 from layer.helper import loader
 from util.logUtil import logger
