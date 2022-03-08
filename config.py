@@ -14,6 +14,7 @@ class BaseConfig:
     NUM_FRAMES = 6
     BATCH_SIZE = 8
     FRAMES_STEP = 1
+    ALL_DIM = 192
     base_lr = 1e-4
     image_based = True
     device_ids = [0, 1]

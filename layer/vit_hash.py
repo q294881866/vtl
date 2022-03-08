@@ -97,7 +97,7 @@ class Discriminator(nn.Module):
 
 class ViTHash(nn.Module):
     def __init__(self, image_size, patch_size, num_frames=BaseConfig.NUM_FRAMES, hash_bits=BaseConfig.HASH_BITS,
-                 dim=GlobalConfig.ALL_DIM, num_classes=1):
+                 dim=BaseConfig.ALL_DIM, num_classes=1):
         super(ViTHash, self).__init__()
         self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=6, heads=9)
         self.discriminate = Discriminator(dim, num_classes, out_act=nn.Softmax)
