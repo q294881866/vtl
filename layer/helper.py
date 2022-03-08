@@ -11,6 +11,7 @@ from einops import rearrange
 from torch import Tensor
 from torchvision.transforms import transforms
 
+from config import BaseConfig
 
 loader = transforms.Compose([
     transforms.ToTensor(),
@@ -20,11 +21,11 @@ hashmap = {}
 
 
 def set_hash_bits(hb):
-    GlobalConfig.HASH_BIT = hb
+    BaseConfig.HASH_BITS = hb
 
 
 def get_hash_bits():
-    return GlobalConfig.HASH_BIT
+    return BaseConfig.HASH_BITS
 
 
 def get_net_h(hash_bit=get_hash_bits()):
