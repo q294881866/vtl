@@ -144,4 +144,4 @@ if __name__ == '__main__':
         num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN, 'src'))
     elif args_.type == 'FF':
         num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN, 'src'))
-    train(cfg, dataloader, test_loader)
+    train(train_cfg, dataloader, test_loader)

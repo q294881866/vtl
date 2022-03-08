@@ -18,7 +18,6 @@ class Genesis:
     def __init__(self, cfg: BaseConfig, train_h=True):
         # base
         self.cfg = cfg
-        print(cfg.rank)
         self.train_h = train_h
         self.setup()
         if self.train_h:
