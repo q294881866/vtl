@@ -47,7 +47,7 @@ class DFTLConfig(BaseConfig):
 
 
 class FFConfig(BaseConfig):
-    NUM_FRAMES = 8
+    NUM_FRAMES = 4
     FRAMES_STEP = NUM_FRAMES // 2
     choice_idx = 0
 
