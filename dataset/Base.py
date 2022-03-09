@@ -152,7 +152,7 @@ def get_dataloader(dataset, cfg):
     else:
         train_sampler = None
     dataloader = tud.DataLoader(dataset=dataset,
-                                num_workers=min(os.cpu_count(), cfg.BATCH_SIZE),
+                                num_workers=0,
                                 batch_size=cfg.BATCH_SIZE, shuffle=cfg.shuffle,
                                 sampler=train_sampler,
                                 )
@@ -161,7 +161,7 @@ def get_dataloader(dataset, cfg):
 
 def load_cache(dataloader, train_cache: TrainCache):
     for values in enumerate(dataloader):
-        print(f'{values[1][0]}-{len(values[1][1].shape)}')
+        print(f'{values[1][0]}-{values[1][1].shape}')
         cache = TrainItem(*values[1])
         train_cache.put(values[0], cache)
         while train_cache.is_stop():
