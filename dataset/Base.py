@@ -158,8 +158,8 @@ def get_dataloader(dataset, cfg):
 
 
 def load_cache(dataloader, train_cache: TrainCache):
-    for idx, value in enumerate(dataloader):
-        cache = TrainItem(*value)
+    for idx, (label, hashes, mask) in enumerate(dataloader):
+        cache = TrainItem(label, hashes, mask)
         train_cache.put(idx, cache)
         while train_cache.is_stop():
             time.sleep(1)
