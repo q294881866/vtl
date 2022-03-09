@@ -67,6 +67,7 @@ class FFDataset(BaseVideoDataset):
                     if self.mask:
                         mask = os.path.join(mask_dir, cls, item)
                         masks.append(mask)
+                    print(f'{src}-{fake}')
                 data_item = DataItem(src, label, start, masks, fakes)
                 start = data_item.end
                 self.data.append(data_item)
