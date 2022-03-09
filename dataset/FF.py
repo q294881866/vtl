@@ -22,14 +22,14 @@ class FFDataset(BaseVideoDataset):
         video_data: DataItem = video_data
         i = random.randint(-3, 100)
         src = self.read_data(video_data.src_dir, files, op=i)
-        hashes, masks = [src], [0,1]
+        hashes, masks = [src], [0, 1]
         for j in range(2):
             fake_idx = random.randint(0, 100) % len(video_data.fake_dir)
             fake_data = self.read_data(video_data.fake_dir[fake_idx], files, op=i)
             hashes.append(fake_data)
             if self.mask:
                 masks[j] = self.read_data(video_data.mask_dir[fake_idx], files, mask=True, op=i)
-        return video_data.label, hashes, masks
+        return video_data.label, torch.cat(hashes), masks
         # else:
         #     src_files, fake_files = [], []
         #     for f in files:
