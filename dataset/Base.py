@@ -60,7 +60,8 @@ class DataItem(object):
         self.mask_dir = mask
         self.fake_dir = fake
         self.files = sorted(os.listdir(self.src_dir))
-        print(self.files)
+        if self.src_dir.__contains__('251'):
+            print(self.files)
         self.end = start + len(self.files)
 
 
