@@ -59,17 +59,15 @@ def train(cfg: BaseConfig, dataloader_, test_loader_):
     # running
     test_itr = enumerate(test_loader_)
     for epoch in range(cfg.EPOCH):
-        train_cache = TrainCache(size=16)
-        _thread.start_new_thread(load_cache, (dataloader_, train_cache))
-        while not train_cache.finished:
-            if train_cache.has_item():
-                try:
-                    item = train_cache.next_data()
-                    train_step(genesis, item, item.idx, epoch, device)
-                    test_step(genesis, item.idx, epoch, test_itr, device)
-                except Exception as e:
-                    print(e)
-                    test_itr = enumerate(test_loader_)
+        for values in enumerate(dataloader_):
+            print(f'{values[1][0]}-{values[1][1].shape}')
+            item = TrainItem(*values[1])
+            try:
+                train_step(genesis, item, item.idx, epoch, device)
+                test_step(genesis, item.idx, epoch, test_itr, device)
+            except Exception as e:
+                print(e)
+                test_itr = enumerate(test_loader_)
 
 
 def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
