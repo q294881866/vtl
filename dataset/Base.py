@@ -22,6 +22,8 @@ class BaseTrainItem:
 
 
 class TrainItem(BaseTrainItem):
+    idx = 0
+
     def __init__(self, label, hashes, mask):
         super(TrainItem, self).__init__()
         self.label = label
@@ -158,11 +160,10 @@ def get_dataloader(dataset, cfg):
 
 
 def load_cache(dataloader, train_cache: TrainCache):
-    idx = 0
-    for label, hashes, mask in enumerate(dataloader):
+    for idx, (label, hashes, mask) in enumerate(dataloader):
+        print(f'{idx}-{label}')
         cache = TrainItem(label, hashes, mask)
         train_cache.put(idx, cache)
-        idx += 1
         while train_cache.is_stop():
             time.sleep(1)
     time.sleep(10)
