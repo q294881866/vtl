@@ -21,6 +21,14 @@ class BaseTrainItem:
         pass
 
 
+class TrainItem(BaseTrainItem):
+    def __init__(self, label, hashes, mask):
+        super(TrainItem, self).__init__()
+        self.label = label
+        self.hashes = hashes
+        self.mask = mask
+
+
 class TrainCache:
     def __init__(self, size):
         self.cache = {}
@@ -149,10 +157,9 @@ def get_dataloader(dataset, cfg):
     return dataloader
 
 
-def load_cache(dataloader, train_cache: TrainCache, item):
-    for idx, values in enumerate(dataloader):
-        print(*values)
-        cache = item(*values)
+def load_cache(dataloader, train_cache: TrainCache):
+    for idx, label, hashes, mask in enumerate(dataloader):
+        cache = TrainItem(label, hashes, mask)
         train_cache.put(idx, cache)
         while train_cache.is_stop():
             time.sleep(1)
@@ -170,14 +177,6 @@ def to_mask_tensor(img, image_size=224):
             if img[h, w] > 120:
                 mask[h, w] = 1.0
     return torch.unsqueeze(mask, 0)
-
-
-class TrainItem(BaseTrainItem):
-    def __init__(self, label, hashes, mask):
-        super(TrainItem, self).__init__()
-        self.label = label
-        self.hashes = hashes
-        self.mask = mask
 
 
 if __name__ == '__main__':
