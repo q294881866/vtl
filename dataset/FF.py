@@ -29,7 +29,7 @@ class FFDataset(BaseVideoDataset):
             hashes.append(fake_data)
             if self.mask:
                 masks[j] = self.read_data(video_data.mask_dir[fake_idx], files, mask=True, op=i)
-        return video_data.label, torch.cat(hashes), masks
+        return video_data.label, torch.cat(hashes, dim=0), masks
         # else:
         #     src_files, fake_files = [], []
         #     for f in files:
