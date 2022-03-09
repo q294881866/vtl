@@ -34,7 +34,6 @@ class FFDataset(BaseVideoDataset):
                 for fake_dir in video_data.fake_dir:
                     fakes.append(os.path.join(fake_dir, f))
                 fake_files.append(fakes)
-            mask_ = self.read_data(video_data.mask_dir, files, mask=True)
             src = self.read_data(video_data.src_dir, files)
             fakes, masks = [], []
             for i in len(video_data.fake_dir):
@@ -58,7 +57,7 @@ class FFDataset(BaseVideoDataset):
                 label = item
                 for cls in listdir:
                     mask = os.path.join(mask_dir, cls, item)
-                    fake = os.path.join(fake_dir, cls, compresses[0])
+                    fake = os.path.join(fake_dir, cls, compresses[0], item)
                     fakes.append(fake)
                     masks.append(mask)
                 data_item = DataItem(src, label, start, masks, fakes)
