@@ -49,7 +49,7 @@ class FFDataset(BaseVideoDataset):
         if os.path.isdir(item_path):
             src_dir = os.path.join(item_path, 'src')
             fake_dir = os.path.join(item_path, 'fake')
-            mask_dir = os.path.join(item_path, 'mask')
+            mask_dir = os.path.join(item_path, 'masks')
             fakes, masks = [], []
             for item in os.listdir(src_dir):
                 listdir = sorted(os.listdir(fake_dir))

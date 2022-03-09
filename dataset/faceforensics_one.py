@@ -49,7 +49,7 @@ class FF1Dataset(BaseVideoDataset):
         if os.path.isdir(item_path):
             src_dir = os.path.join(item_path, 'src')
             fake_dir = os.path.join(item_path, 'fake')
-            mask_dir = os.path.join(item_path, 'mask')
+            mask_dir = os.path.join(item_path, 'masks')
             for item in os.listdir(src_dir):
                 src = os.path.join(src_dir, item)
                 label = item
