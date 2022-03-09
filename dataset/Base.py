@@ -151,6 +151,7 @@ def get_dataloader(dataset, cfg):
 
 def load_cache(dataloader, train_cache: TrainCache, item):
     for idx, values in enumerate(dataloader):
+        print(*values)
         cache = item(*values)
         train_cache.put(idx, cache)
         while train_cache.is_stop():
