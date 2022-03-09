@@ -6,9 +6,13 @@ import torch
 from dataset.Base import BaseVideoDataset, DataItem, BaseTrainItem
 
 compresses = ['raw', 'c23', 'c40']
+trace_listdir = ['face2face', 'faceshifter', 'faceswap', 'deepfakes', 'neuraltextures']
+mask_listdir = ['face2face', 'faceswap', 'deepfakes', 'neuraltextures']
 
 
 class FFDataset(BaseVideoDataset):
+    mask = False
+
     def __init__(self, cfg):
         super().__init__(cfg=cfg)
 
@@ -23,8 +27,9 @@ class FFDataset(BaseVideoDataset):
                 fake_idx = random.randint(0, 100) % len(video_data.fake_dir)
                 fake_data = self.read_data(video_data.fake_dir[fake_idx], files, op=i)
                 hashes.append(fake_data)
-                mask_data = self.read_data(video_data.mask_dir[fake_idx], files, mask=True, op=i)
-                masks.append(mask_data)
+                if self.mask:
+                    mask_data = self.read_data(video_data.mask_dir[fake_idx], files, mask=True, op=i)
+                    masks.append(mask_data)
             return video_data.label, hashes, masks
         else:
             src_files, fake_files = [], []
@@ -38,9 +43,10 @@ class FFDataset(BaseVideoDataset):
             fakes, masks = [], []
             for i in len(video_data.fake_dir):
                 fake = self.read_data(video_data.fake_dir[i], files)
-                mask = self.read_data(video_data.mask_dir[i], files)
                 fakes.append(fake)
-                masks.append(mask)
+                if self.mask:
+                    mask = self.read_data(video_data.mask_dir[i], files)
+                    masks.append(mask)
             return video_data.label, [src_files, fake_files, src, fakes], masks
 
     def _load_data(self):
@@ -52,14 +58,15 @@ class FFDataset(BaseVideoDataset):
             mask_dir = os.path.join(item_path, 'masks')
             fakes, masks = [], []
             for item in os.listdir(src_dir):
-                listdir = sorted(os.listdir(fake_dir))
+                listdir = mask_listdir if self.mask else trace_listdir
                 src = os.path.join(src_dir, item)
                 label = item
                 for cls in listdir:
-                    mask = os.path.join(mask_dir, cls, item)
                     fake = os.path.join(fake_dir, cls, compresses[0], item)
                     fakes.append(fake)
-                    masks.append(mask)
+                    if self.mask:
+                        mask = os.path.join(mask_dir, cls, item)
+                        masks.append(mask)
                 data_item = DataItem(src, label, start, masks, fakes)
                 start = data_item.end
                 self.data.append(data_item)
