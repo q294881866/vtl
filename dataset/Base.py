@@ -158,9 +158,11 @@ def get_dataloader(dataset, cfg):
 
 
 def load_cache(dataloader, train_cache: TrainCache):
-    for idx, (label, hashes, mask) in enumerate(dataloader):
+    idx = 0
+    for label, hashes, mask in enumerate(dataloader):
         cache = TrainItem(label, hashes, mask)
         train_cache.put(idx, cache)
+        idx += 1
         while train_cache.is_stop():
             time.sleep(1)
     time.sleep(10)
