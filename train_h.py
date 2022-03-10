@@ -60,12 +60,12 @@ def train(cfg: BaseConfig, dataloader_, test_loader_):
         for values in enumerate(dataloader_):
             item = TrainItem(*values[1])
             item.idx = values[0]
-            try:
-                train_step(genesis, item, item.idx, epoch, device)
-                test_step(genesis, item.idx, epoch, test_itr, device)
-            except Exception as e:
-                print(e)
-                test_itr = enumerate(test_loader_)
+            # try:
+            train_step(genesis, item, item.idx, epoch, device)
+            test_step(genesis, item.idx, epoch, test_itr, device)
+            # except Exception as e:
+            #     print(e)
+            #     test_itr = enumerate(test_loader_)
 
 
 def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):

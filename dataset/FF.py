@@ -35,7 +35,10 @@ class FFDataset(BaseVideoDataset):
             fake_dir = video_data.fake_dir[idx]
             src_file = os.path.join(video_data.src_dir, files[0])
             fake_file = os.path.join(fake_dir, files[0])
-            mask = self.read_data(video_data.mask_dir[idx], files, mask=True)
+            if self.mask:
+                mask = self.read_data(video_data.mask_dir[idx], files, mask=True)
+            else:
+                mask = 0
             fake = self.read_data(fake_dir, files)
             return video_data.label, src_file, fake_file, fake, mask
 
