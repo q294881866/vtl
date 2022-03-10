@@ -9,7 +9,7 @@ from layer.helper import to_hashmap
 def hash_triplet_loss(hashset, label, device):
     h_map = to_hashmap(hashset, label)
     c = len(hashset) // len(label)
-    intra_loss, inter_loss = 0, 0
+    intra_loss, inter_loss = torch.zeros(1), torch.zeros(1)
     for k, v in h_map.items():
         for i in range(len(label)):
             l_ = label[i]
@@ -21,8 +21,8 @@ def hash_triplet_loss(hashset, label, device):
                 if k == l_:
                     intra_loss = (intra_loss + _loss) / 2
     helper.update_hash(h_map)
-    multi = inter_loss.item() // intra_loss.item() // 10
-    return inter_loss + intra_loss * multi * 10
+    multi = max(inter_loss.item() // intra_loss.item() // 10 * 10, 1)
+    return inter_loss + intra_loss * multi
 
 
 def mask_loss(input_: Tensor, target: Tensor):

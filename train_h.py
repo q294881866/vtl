@@ -1,5 +1,4 @@
 import argparse
-import argparse
 import os
 
 import numpy as np
@@ -74,7 +73,7 @@ def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     hashes = cb2b(item.hashes, device)
     loss_h = train_h(genesis, hashes, item.label, device, idx)
     # epoch log
-    logger.info(f"Train Epoch:{epoch}/{idx},H Loss:{loss_h:.5f},hash dis:{helper.hash_intra_dis():.5f}")
+    logger.info(f"Train Epoch:{epoch}/{idx},H Loss:{loss_h.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
 
 
 def test_step(genesis: Genesis, idx, epoch, test_itr, device):
@@ -105,9 +104,9 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--path', type=str, default=r'E:\dataset\in')
+parser.add_argument('--path', type=str, default=r'E:\dataset\ff')
 parser.add_argument('--local_rank', type=int, default=0)
-parser.add_argument('--type', type=str, default='Davis2016')
+parser.add_argument('--type', type=str, default='FF')
 parser.add_argument('--bits', type=int, default=512)
 if __name__ == '__main__':
     args_ = parser.parse_args()

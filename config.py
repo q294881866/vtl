@@ -11,7 +11,7 @@ class BaseConfig:
     PATCH_SIZE = 16
     IN_CHANNELS = 3
     NUM_CLASSES = 1
-    NUM_FRAMES = 6
+    NUM_FRAMES = 4
     BATCH_SIZE = 8
     FRAMES_STEP = 1
     ALL_DIM = 192
@@ -56,7 +56,7 @@ class FFConfig(BaseConfig):
 
 
 class Davis2016Config(BaseConfig):
-    NUM_FRAMES = 6
+    NUM_FRAMES = 4
     FRAMES_STEP = 1
 
     def __init__(self, mode, set_path, checkpoint, rank):
