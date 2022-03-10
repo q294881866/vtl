@@ -1,4 +1,4 @@
-import _thread
+import argparse
 import argparse
 import os
 
@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 
 from config import DFTLConfig, Davis2016Config, FFConfig, BaseConfig
-from dataset.Base import TrainCache, load_cache, TrainItem, get_dataloader
+from dataset.Base import TrainItem, get_dataloader
 from dataset.DFTL import DFTLDataset
 from dataset.Davis2016TL import Davis2016Dataset
 from dataset.FF import FFDataset
@@ -15,7 +15,6 @@ from layer import helper
 from layer.fn import hash_triplet_loss
 from layer.genesis import Genesis
 from layer.helper import cb2b
-from util import figureUtil
 from util.logUtil import logger
 
 # program init
@@ -60,8 +59,8 @@ def train(cfg: BaseConfig, dataloader_, test_loader_):
     test_itr = enumerate(test_loader_)
     for epoch in range(cfg.EPOCH):
         for values in enumerate(dataloader_):
-            print(f'{values[1][0]}-{values[1][1].shape}')
             item = TrainItem(*values[1])
+            item.idx = values[0]
             try:
                 train_step(genesis, item, item.idx, epoch, device)
                 test_step(genesis, item.idx, epoch, test_itr, device)
@@ -73,18 +72,17 @@ def train(cfg: BaseConfig, dataloader_, test_loader_):
 def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     # HashNet
     hashes = cb2b(item.hashes, device)
-    loss_h, acc = train_h(genesis, hashes, item.label, device, idx)
+    loss_h = train_h(genesis, hashes, item.label, device, idx)
     # epoch log
-    logger.info("Train Epoch:{}/{},H Loss:{:.5f},hash dis:{:.5f} acc:{:.5f}".
-                format(epoch, idx, loss_h, helper.hash_intra_dis(), acc))
+    logger.info(f"Train Epoch:{epoch}/{idx},H Loss:{loss_h:.5f},hash dis:{helper.hash_intra_dis():.5f}")
 
 
 def test_step(genesis: Genesis, idx, epoch, test_itr, device):
     if idx % 100 == 0:
         genesis.eval()
-        _, (label, datas, masks) = test_itr.__next__()
+        _, (label, _, _, fake, _) = test_itr.__next__()
         # HashNet
-        fakes = cb2b(datas[3], device)
+        fakes = cb2b(fake, device)
         h = genesis.h(fakes)
         acc = helper.find_index(h, label)
         # epoch log
@@ -103,15 +101,13 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
     h_loss.backward()
     genesis.opt_h.step()
     # genesis.scheduler_h.step()
-    # hashcode accuracy
-    acc = helper.find_index(h, label)
-    return h_loss, acc
+    return h_loss
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--path', type=str, default=r'Y:\vrf_')
+parser.add_argument('--path', type=str, default=r'E:\dataset\in')
 parser.add_argument('--local_rank', type=int, default=0)
-parser.add_argument('--type', type=str, default='FF')
+parser.add_argument('--type', type=str, default='Davis2016')
 parser.add_argument('--bits', type=int, default=512)
 if __name__ == '__main__':
     args_ = parser.parse_args()
@@ -133,4 +129,5 @@ if __name__ == '__main__':
         num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN, 'src'))
     elif args_.type == 'FF':
         num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN, 'src'))
+    train_cfg.NUM_CLASSES = num_classes
     train(train_cfg, dataloader, test_loader)

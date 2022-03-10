@@ -3,12 +3,12 @@ import os
 import time
 from collections import Counter
 from datetime import datetime
-from torch.nn import functional as F
 
 import numpy as np
 import torch
 from einops import rearrange
 from torch import Tensor
+from torch.nn import functional as F
 from torchvision.transforms import transforms
 
 from config import BaseConfig
@@ -161,8 +161,7 @@ def compute_hamming_dist(a, b):
 
 
 def find_index(hashset: Tensor, label: []):
-    hashset_ = tensor_to_binary(hashset)
-    h_map = to_hashmap(hashset_, label)
+    h_map = to_hashmap(hashset, label)
     real_count = 0
     for k_, v_ in h_map.items():
         f_l = k_
@@ -184,8 +183,9 @@ def to_hashmap(hashset: Tensor, label):
         h_map[l_] = []
     for i in range(len(label)):
         l_ = label[i]
-        h_map[l_].append(gen_hash(hashset_[i].numpy()))
-    for k, v in h_map.items():
+        voted_center = gen_hash(hashset_[i].numpy())
+        h_map[l_].append(voted_center)
+    for k, v in h_map.items(): # multi label
         h_map[k] = gen_hash(v)
     return h_map
 

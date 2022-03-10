@@ -6,10 +6,10 @@ from abc import ABCMeta
 import numpy as np
 import torch
 from PIL import Image, ImageFilter
-from layer.helper import tensor_resize, tensor2img
 from torch.utils import data as tud
 from torch.utils.data import Dataset
 
+from layer.helper import tensor_resize, tensor2img
 from util.logUtil import logger
 
 
@@ -138,7 +138,7 @@ class BaseVideoDataset(Dataset, metaclass=ABCMeta):
         data = torch.cat(tensors, dim=0)
         if self.cfg.image_based:
             data = torch.squeeze(data, dim=0)
-        return data
+        return data.unsqueeze(0)
 
 
 def get_dataloader(dataset, cfg):

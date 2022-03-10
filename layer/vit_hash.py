@@ -3,9 +3,9 @@ import torch.nn as nn
 from einops import repeat, rearrange
 from einops.layers.torch import Rearrange
 
-
 from config import BaseConfig
 from layer.block import Transformer, LinearBn, Attention, Residual
+from layer.helper import tensor_to_binary
 
 
 class FeatureNet(nn.Module):
@@ -101,14 +101,14 @@ class ViTHash(nn.Module):
         super(ViTHash, self).__init__()
         self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=6, heads=9)
         self.discriminate = Discriminator(dim, num_classes, out_act=nn.Softmax)
-        self.hash_net = Discriminator(dim, hash_bits, out_act=nn.Tanh)
+        self.hash_net = Discriminator(dim, hash_bits, out_act=nn.Softsign)
 
     def forward(self, x):
         x = self.feature_exact(x)
         if self.training:
             d = self.discriminate(x)
             h = self.hash_net(x)
-            return d, h
+            return d, tensor_to_binary(h)
         else:
             h = self.hash_net(x)
-            return h
+            return tensor_to_binary(h)
