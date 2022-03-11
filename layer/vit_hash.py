@@ -10,8 +10,8 @@ from layer.helper import tensor_to_binary
 
 class FeatureNet(nn.Module):
     def __init__(self, image_size, patch_size, num_frames, dim=192, depth=4, heads=3,
-                 in_channels=3, dim_head=64, dropout=0.,
-                 emb_dropout=0., scale_dim=4, ):
+            in_channels=3, dim_head=64, dropout=0.,
+            emb_dropout=0., scale_dim=4, ):
         super(FeatureNet, self).__init__()
 
         # split image to patch, embedded num_frames * patch
@@ -63,7 +63,7 @@ class FeatureNet(nn.Module):
 
 
 class Discriminator(nn.Module):
-    def __init__(self, dim, num_classes=2, depth=4, out_act=nn.Sigmoid):
+    def __init__(self, dim, num_classes=2, depth=4):
         super(Discriminator, self).__init__()
         self.blocks = []
         for i in range(1, depth):
@@ -78,14 +78,11 @@ class Discriminator(nn.Module):
             if i < depth - 1:
                 self.blocks.append(Attention(
                     in_dim, out_dim))
-            else:
-                self.blocks.append(nn.Sigmoid())
         self.blocks = torch.nn.Sequential(*self.blocks)
 
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(dim // 2 * 4),
             nn.Linear(dim // 2 * 4, num_classes),
-            out_act()
         )
 
     def forward(self, x):
@@ -97,11 +94,17 @@ class Discriminator(nn.Module):
 
 class ViTHash(nn.Module):
     def __init__(self, image_size, patch_size, num_frames=BaseConfig.NUM_FRAMES, hash_bits=BaseConfig.HASH_BITS,
-                 dim=BaseConfig.ALL_DIM, num_classes=1):
+            dim=BaseConfig.ALL_DIM, num_classes=1):
         super(ViTHash, self).__init__()
         self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=6, heads=9)
-        self.discriminate = Discriminator(dim, num_classes, out_act=nn.Softmax)
-        self.hash_net = Discriminator(dim, hash_bits, out_act=nn.ReLU)
+        self.discriminate = nn.Sequential(
+            Discriminator(dim, num_classes),
+            nn.Softmax(dim=1)
+        )
+        self.hash_net = nn.Sequential(
+            Discriminator(dim, num_classes),
+            nn.ReLU()
+        )
 
     def forward(self, x):
         x = self.feature_exact(x)
