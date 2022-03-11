@@ -95,12 +95,16 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
     # train
     d, h = genesis.h(train_data)
     h_loss = hash_triplet_loss(h, label, d)
+    # d loss
+    d_label = get_tensor_target(label).to(device)
+    d_loss = bce_loss(d.flatten(), d_label.flatten())
+    d_h_loss = h_loss + d_loss
     # backward
     genesis.reset_grad()
-    h_loss.backward()
+    d_h_loss.backward()
     genesis.opt_h.step()
     # genesis.scheduler_h.step()
-    return h_loss
+    return d_loss
 
 
 parser = argparse.ArgumentParser()
