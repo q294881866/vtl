@@ -101,7 +101,7 @@ class ViTHash(nn.Module):
         super(ViTHash, self).__init__()
         self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=6, heads=9)
         self.discriminate = Discriminator(dim, num_classes, out_act=nn.Softmax)
-        self.hash_net = Discriminator(dim, hash_bits, out_act=nn.Softsign)
+        self.hash_net = Discriminator(dim, hash_bits, out_act=nn.ReLU)
 
     def forward(self, x):
         x = self.feature_exact(x)
