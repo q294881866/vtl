@@ -23,6 +23,7 @@ class BaseConfig:
     denormalize = None
     HASH_BITS = 512
     pretrained = ''
+    type = ''
 
     mean = [0.565, 0.556, 0.547]
     std = [0.232, 0.233, 0.234]
@@ -41,6 +42,7 @@ class BaseConfig:
 class DFTLConfig(BaseConfig):
     NUM_FRAMES = 8
     FRAMES_STEP = NUM_FRAMES // 2
+    type = 'DFTL'
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)
@@ -50,6 +52,7 @@ class FFConfig(BaseConfig):
     NUM_FRAMES = 4
     FRAMES_STEP = NUM_FRAMES // 2
     choice_idx = 0
+    type = 'FF'
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)
@@ -58,6 +61,7 @@ class FFConfig(BaseConfig):
 class Davis2016Config(BaseConfig):
     NUM_FRAMES = 4
     FRAMES_STEP = 1
+    type = 'Davis2016'
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)

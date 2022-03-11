@@ -86,8 +86,8 @@ def test_step(genesis: Genesis, idx, epoch, test_itr, device):
         acc = helper.find_index(h, label)
         # epoch log
         logger.info("Test :{}/{}, acc:{:.5f}".format(epoch, idx, acc))
-        genesis.save('model/{}_{}_'.format(epoch, idx))
-        helper.save_hash('model/{}_{}_'.format(epoch, idx), genesis.cfg.HASH_BITS)
+        genesis.save(f'model/{genesis.cfg.type}_{epoch}_{idx}_')
+        helper.save_hash(f'model/{genesis.cfg.type}_{epoch}_{idx}_', genesis.cfg.HASH_BITS)
         genesis.train()
 
 
