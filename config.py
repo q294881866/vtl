@@ -53,6 +53,7 @@ class FFConfig(BaseConfig):
     FRAMES_STEP = NUM_FRAMES // 2
     choice_idx = 0
     type = 'FF'
+    BATCH_SIZE = 12
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)
