@@ -159,7 +159,7 @@ def get_dataloader(dataset, cfg):
     else:
         train_sampler = None
     dataloader = tud.DataLoader(dataset=dataset,
-                                num_workers=0,
+                                num_workers=min(os.cpu_count(), cfg.BATCH_SIZE),
                                 batch_size=cfg.BATCH_SIZE, shuffle=cfg.shuffle,
                                 sampler=train_sampler,
                                 )
