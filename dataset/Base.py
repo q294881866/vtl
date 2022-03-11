@@ -61,11 +61,15 @@ class DataItem(object):
         self.src_dir = src
         self.mask_dir = mask
         self.fake_dir = fake
+        self.files = sorted(os.listdir(self.fake_dir))
+        length_files = len(self.files)
         if isinstance(self.fake_dir, list):
-            self.files = sorted(os.listdir(self.fake_dir[0]))
-        else:
-            self.files = sorted(os.listdir(self.fake_dir))
-        self.end = start + len(self.files)
+            for fake_dir in self.fake_dir:
+                files = sorted(os.listdir(fake_dir))
+                if len(files) < length_files:
+                    length_files = len(files)
+                    self.files = files
+        self.end = start + length_files
 
 
 class BaseVideoDataset(Dataset, metaclass=ABCMeta):

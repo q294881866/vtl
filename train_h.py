@@ -71,7 +71,7 @@ def train(cfg: BaseConfig, dataloader_, test_loader_):
 def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     # HashNet
     hashes = cb2b(item.hashes, device)
-    loss_h, loss_d = train_h(genesis, hashes, item.label, device, idx)
+    loss_h, loss_d = train_h(genesis, hashes, item.label, device)
     # epoch log
     logger.info(f"Train Epoch:{epoch}/{idx},H Loss:{loss_h.item():.5f}, D Loss:{loss_d.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
 
@@ -91,14 +91,15 @@ def test_step(genesis: Genesis, idx, epoch, test_itr, device):
         genesis.train()
 
 
-def train_h(genesis: Genesis, train_data, label, device, idx):
+def train_h(genesis: Genesis, train_data, label, device):
     # train
     d, h = genesis.h(train_data)
     h_loss = hash_triplet_loss(h, label, d)
     # d loss
     d_label = get_tensor_target(label).to(device)
     d_loss = bce_loss(d.flatten(), d_label.flatten())
-    d_h_loss = h_loss + d_loss * 10
+    multi = max(h_loss.item() // d_loss.item() // 10 * 10, 1)
+    d_h_loss = h_loss + d_loss * multi
     # backward
     genesis.reset_grad()
     d_h_loss.backward()
