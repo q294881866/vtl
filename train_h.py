@@ -19,7 +19,6 @@ from util.logUtil import logger
 # program init
 label_set = {}
 bce_loss = nn.BCELoss(reduction='mean')
-itr_times, g_losses, h_losses, d_losses, h_d_losses, accuracies, hash_dists = [], [], [], [], [], [], []
 choices = {
     'DFTL': (DFTLDataset, DFTLConfig),
     'Davis2016': (Davis2016Dataset, Davis2016Config),
@@ -94,7 +93,7 @@ def test_step(genesis: Genesis, idx, epoch, test_itr, device):
 def train_h(genesis: Genesis, train_data, label, device):
     # train
     d, h = genesis.h(train_data)
-    h_loss = hash_triplet_loss(h, label, d)
+    h_loss = hash_triplet_loss(h, label, device)
     # d loss
     d_label = get_tensor_target(label).to(device)
     d_loss = bce_loss(d.flatten(), d_label.flatten())
