@@ -15,13 +15,13 @@ from util.logUtil import logger
 
 
 class Genesis:
-    def __init__(self, cfg, train_h=True):
+    def __init__(self, cfg: BaseConfig, train_h=True):
         # base
         self.cfg = cfg
         self.train_h = train_h
         self.setup()
         if self.train_h:
-            self.h = ViTHash(cfg.IMAGE_SIZE, cfg.PATCH_SIZE, num_classes=cfg.NUM_CLASSES, hash_bits=cfg.HASH_BITS)
+            self.h = ViTHash(cfg.IMAGE_SIZE, cfg.PATCH_SIZE, num_classes=cfg.NUM_CLASSES, num_frames=cfg.NUM_FRAMES, hash_bits=cfg.HASH_BITS)
         else:
             self.g = ConvTransGenerator()
         self._optimizer()
