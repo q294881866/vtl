@@ -98,8 +98,7 @@ def train_h(genesis: Genesis, train_data, label, device):
     # d loss
     d_label = get_tensor_target(label).to(device)
     d_loss = bce_loss(d.flatten(), d_label.flatten())
-    multi = max(h_loss.item() // d_loss.item() // 10 * 10, 1)
-    d_h_loss = h_loss + d_loss * multi
+    d_h_loss = h_loss + d_loss * 50
     # backward
     genesis.reset_grad()
     d_h_loss.backward()

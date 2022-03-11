@@ -21,8 +21,7 @@ def hash_triplet_loss(hashset, label, device):
                 if k == l_:
                     intra_loss = (intra_loss + _loss) / 2
     helper.update_hash(h_map)
-    multi = max(inter_loss.item() // intra_loss.item() // 10 * 10, 1)
-    return inter_loss + intra_loss * multi
+    return inter_loss + intra_loss * 10
 
 
 def mask_loss(input_: Tensor, target: Tensor):
