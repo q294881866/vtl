@@ -102,7 +102,7 @@ class ViTHash(nn.Module):
             nn.Softmax(dim=1)
         )
         self.hash_net = nn.Sequential(
-            Discriminator(dim, num_classes),
+            Discriminator(dim, hash_bits),
             nn.ReLU()
         )
 
