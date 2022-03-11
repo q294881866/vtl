@@ -49,7 +49,7 @@ def get_tensor_target(labels: []):
     return torch.from_numpy(x)
 
 
-def train(cfg: BaseConfig, dataloader_, test_loader_):
+def train(cfg, dataloader_, test_loader_):
     # init
     genesis = Genesis(cfg, train_h=True)
     device = genesis.device

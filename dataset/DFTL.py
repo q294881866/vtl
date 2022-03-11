@@ -1,17 +1,10 @@
 import os
 import random
-import time
 
-import numpy as np
 import torch
-from PIL import Image as Image, ImageFilter
-from torch.utils import data as tud
-from torch.utils.data import Dataset
 
 from config import BaseConfig
 from dataset.Base import BaseVideoDataset
-from layer.helper import loader
-from util.logUtil import logger
 
 
 class DataItem(object):
@@ -53,12 +46,12 @@ class DFTLDataset(BaseVideoDataset):
         for e in self.data:
             video_data: DataItem = e
             # global length
-            start = idx * BaseConfig.NUM_FRAMES
+            start = idx * self.cfg.NUM_FRAMES
             if start < video_data.end:
-                end = start + BaseConfig.NUM_FRAMES
+                end = start + self.cfg.NUM_FRAMES
                 if end > video_data.end:
                     # item length
-                    start = video_data.end - BaseConfig.NUM_FRAMES
+                    start = video_data.end - self.cfg.NUM_FRAMES
                     end = video_data.end
                 break
         start = start - video_data.start
@@ -68,7 +61,7 @@ class DFTLDataset(BaseVideoDataset):
 
     def __getitem__(self, index):
         files, video_data = self._get_files(index)
-        if self.mode == BaseConfig.TRAIN:
+        if self.cfg.mode == BaseConfig.TRAIN:
             i = random.randint(-3, 5)
             # 1 mask
             mask_ = self.read_data(video_data.mask_dir, files, mask=True, op=i)

@@ -15,7 +15,7 @@ from util.logUtil import logger
 
 
 class Genesis:
-    def __init__(self, cfg: BaseConfig, train_h=True):
+    def __init__(self, cfg, train_h=True):
         # base
         self.cfg = cfg
         self.train_h = train_h
