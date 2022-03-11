@@ -71,9 +71,9 @@ def train(cfg: BaseConfig, dataloader_, test_loader_):
 def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     # HashNet
     hashes = cb2b(item.hashes, device)
-    loss_h = train_h(genesis, hashes, item.label, device, idx)
+    loss_h, loss_d = train_h(genesis, hashes, item.label, device, idx)
     # epoch log
-    logger.info(f"Train Epoch:{epoch}/{idx},H Loss:{loss_h.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
+    logger.info(f"Train Epoch:{epoch}/{idx},H Loss:{loss_h.item():.5f}, D Loss:{loss_d.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
 
 
 def test_step(genesis: Genesis, idx, epoch, test_itr, device):
@@ -104,7 +104,7 @@ def train_h(genesis: Genesis, train_data, label, device, idx):
     d_h_loss.backward()
     genesis.opt_h.step()
     # genesis.scheduler_h.step()
-    return d_loss
+    return h_loss, d_loss
 
 
 parser = argparse.ArgumentParser()
