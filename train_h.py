@@ -57,7 +57,7 @@ def train(cfg, dataloader_, test_loader_):
     # running
     test_itr = enumerate(test_loader_)
     for epoch in range(cfg.EPOCH):
-        train_cache = TrainCache(size=32)
+        train_cache = TrainCache(size=128)
         _thread.start_new_thread(load_cache, (dataloader_, train_cache))
         while not train_cache.finished:
             if train_cache.has_item():
