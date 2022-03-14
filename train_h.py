@@ -111,6 +111,7 @@ parser.add_argument('--path', type=str, default=r'E:\dataset\ff')
 parser.add_argument('--local_rank', type=int, default=0)
 parser.add_argument('--type', type=str, default='FF')
 parser.add_argument('--bits', type=int, default=512)
+parser.add_argument('--pretrained', type=str, default='net_h.pth')
 if __name__ == '__main__':
     args_ = parser.parse_args()
     print('args:{}'.format(args_))
@@ -120,6 +121,7 @@ if __name__ == '__main__':
     train_cfg = cfg(cfg.TRAIN, os.path.join(args_.path, cfg.TRAIN), args_.path, args_.local_rank)
     dataset = Dataset(cfg=train_cfg)
     dataloader = get_dataloader(dataset=dataset, cfg=train_cfg)
+    train_cfg.pretrained = args_.pretrained
 
     test_cfg = cfg(cfg.TEST, os.path.join(args_.path, cfg.TEST), args_.path, args_.local_rank)
     dataset = Dataset(cfg=test_cfg)
