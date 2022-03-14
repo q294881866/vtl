@@ -42,7 +42,8 @@ class Genesis:
 
     def _optimizer(self):
         if self.train_h:
-            self.opt_h = torch.optim.Adam(self.h.parameters(), lr=self.cfg.base_lr)
+            # self.opt_h = torch.optim.Adam(self.h.parameters(), lr=self.cfg.base_lr)
+            self.opt_h = self.optimizer_sgd(self.h, self.cfg.base_lr)
         else:
             self.opt_g = torch.optim.Adam(self.g.parameters(), lr=self.cfg.base_lr)
 
