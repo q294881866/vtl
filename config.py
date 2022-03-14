@@ -49,11 +49,11 @@ class DFTLConfig(BaseConfig):
 
 
 class FFConfig(BaseConfig):
-    NUM_FRAMES = 8
+    NUM_FRAMES = 4
     FRAMES_STEP = NUM_FRAMES // 2
     choice_idx = 0
     type = 'FF'
-    BATCH_SIZE = 12
+    BATCH_SIZE = 6
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)
