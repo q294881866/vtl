@@ -162,9 +162,10 @@ def compute_hamming_dist(a, b):
 
 
 def find_index(hashset: Tensor, label: []):
-    h_map = to_hashmap(hashset, label)
     real_count = 0
-    for k_, v_ in h_map.items():
+    for i in range(len(label)):
+        k_ = label[i]
+        v_ = hashset[i].detach().cpu().numpy()
         f_l = k_
         min_dis = get_hash_bits()
         for k, v in hashmap.items():
@@ -186,7 +187,7 @@ def to_hashmap(hashset: Tensor, label):
         l_ = label[i]
         voted_center = gen_hash(hashset_[i].numpy())
         h_map[l_].append(voted_center)
-    for k, v in h_map.items(): # multi label
+    for k, v in h_map.items():  # multi label
         h_map[k] = gen_hash(v)
     return h_map
 
