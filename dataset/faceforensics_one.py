@@ -1,10 +1,7 @@
 import os
 import random
 
-import torch
-
-from config import FFConfig
-from dataset.Base import BaseVideoDataset, DataItem, BaseTrainItem
+from dataset.Base import BaseVideoDataset, DataItem
 
 listdir = ['face2face', 'faceshifter', 'faceswap', 'deepfakes', 'neuraltextures']
 
@@ -15,7 +12,7 @@ class FF1Dataset(BaseVideoDataset):
 
     def __getitem__(self, index):
         files, video_data = self.getitem(index)
-        if self.mode == self.cfg.TRAIN:
+        if self.cfg.mode == self.cfg.TRAIN:
             video_data: DataItem = video_data
             i = random.randint(-3, 100)
             src = self.read_data(video_data.src_dir, files, op=i)

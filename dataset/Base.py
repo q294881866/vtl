@@ -168,7 +168,6 @@ def get_dataloader(dataset, cfg):
 
 def load_cache(dataloader, train_cache: TrainCache):
     for values in enumerate(dataloader):
-        print(f'{values[1][0]}-{values[1][1].shape}')
         cache = TrainItem(*values[1])
         train_cache.put(values[0], cache)
         while train_cache.is_stop():
