@@ -103,7 +103,7 @@ class ViTHash(nn.Module):
         )
         self.hash_net = nn.Sequential(
             Discriminator(dim, hash_bits),
-            nn.Tanh()
+            nn.ReLU()
         )
 
     def forward(self, x):

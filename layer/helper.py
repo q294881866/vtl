@@ -40,7 +40,7 @@ def tensor2img(image, path=None):
 
 
 def get_hash_json(hash_bit=get_hash_bits()):
-    return str(hash_bit) + '_hash3.json'
+    return str(hash_bit) + '_hash.json'
 
 
 def gen_hash(hashset: []):
@@ -151,8 +151,8 @@ def hashmap_mean():
 
 
 def tensor_to_binary(x: Tensor):
-    return (torch.sign(x) + 1) / 2
-    # return torch.sign(x)
+    # return (torch.sign(x) + 1) / 2
+    return torch.sign(x)
 
 
 def compute_hamming_dist(a, b):
