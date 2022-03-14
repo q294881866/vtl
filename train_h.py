@@ -102,7 +102,7 @@ def train_h(genesis: Genesis, train_data, label, device):
     genesis.reset_grad()
     d_h_loss.backward()
     genesis.opt_h.step()
-    # genesis.scheduler_h.step()
+    genesis.scheduler_h.step()
     return h_loss, d_loss
 
 
