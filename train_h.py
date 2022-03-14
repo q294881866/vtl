@@ -57,7 +57,7 @@ def train(cfg, dataloader_, test_loader_):
     # running
     test_itr = enumerate(test_loader_)
     for epoch in range(cfg.EPOCH):
-        train_cache = TrainCache(size=128)
+        train_cache = TrainCache(size=1024)
         _thread.start_new_thread(load_cache, (dataloader_, train_cache))
         while not train_cache.finished:
             if train_cache.has_item():
@@ -99,7 +99,7 @@ def train_h(genesis: Genesis, train_data, label, device):
     d_h_loss = d_loss * 10 + h_loss
     # backward
     genesis.reset_grad()
-    h_loss.backward()
+    d_h_loss.backward()
     genesis.opt_h.step()
     genesis.scheduler_h.step()
     return h_loss, d_loss

@@ -40,7 +40,7 @@ def tensor2img(image, path=None):
 
 
 def get_hash_json(hash_bit=get_hash_bits()):
-    return str(hash_bit) + '_hash.json'
+    return str(hash_bit) + '_hash3.json'
 
 
 def gen_hash(hashset: []):
