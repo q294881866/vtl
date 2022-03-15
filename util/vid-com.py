@@ -3,9 +3,9 @@ import random
 
 import cv2
 
-source_path = 'E:/manual/SOURCE'
-jpg_path = 'E:/manual/JPEGImages'
-annotations_path = 'E:/manual/Annotations'
+source_path = '/ssd1/data/lwl/manual/SOURCE'
+jpg_path = '/ssd1/data/lwl/youtube-vos/train/JPEGImages'
+annotations_path = '/ssd1/data/lwl/youtube-vos/train/Annotations'
 
 fake_path = './fake'
 mask_path = './mask'
