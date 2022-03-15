@@ -6,7 +6,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from config import DFTLConfig, Davis2016Config, FFConfig
+from config import DFTLConfig, Davis2016Config, FFConfig, BaseConfig
 from dataset.Base import TrainItem, get_dataloader, TrainCache, load_cache
 from dataset.DFTL import DFTLDataset
 from dataset.Davis2016TL import Davis2016Dataset
@@ -106,7 +106,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--path', type=str, default=r'E:\dataset\ff')
 parser.add_argument('--local_rank', type=int, default=0)
 parser.add_argument('--type', type=str, default='FF')
-parser.add_argument('--bits', type=int, default=512)
+parser.add_argument('--bits', type=int, default=BaseConfig.HASH_BITS)
 parser.add_argument('--pretrained', type=str, default='net_h.pth')
 if __name__ == '__main__':
     args_ = parser.parse_args()

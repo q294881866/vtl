@@ -150,19 +150,9 @@ class BaseVideoDataset(Dataset, metaclass=ABCMeta):
 
 
 def get_dataloader(dataset, cfg):
-    if cfg.IS_DISTRIBUTION:
-        train_sampler = torch.utils.data.distributed.DistributedSampler(
-            dataset,
-            num_replicas=torch.cuda.device_count(),
-            rank=0,
-            shuffle=True
-        )
-    else:
-        train_sampler = None
     dataloader = tud.DataLoader(dataset=dataset,
-                                num_workers=0,
-                                batch_size=cfg.BATCH_SIZE, shuffle=cfg.shuffle,
-                                sampler=train_sampler,
+                                num_workers=min(os.cpu_count(), cfg.BATCH_SIZE),
+                                batch_size=cfg.BATCH_SIZE, shuffle=True,
                                 pin_memory=True
                                 )
     return dataloader
