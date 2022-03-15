@@ -21,7 +21,7 @@ def test_trans_generator():
 def test_vrf():
     img = torch.randn([GlobalConfig.BATCH_SIZE, GlobalConfig.NUM_FRAME, 3, 224, 224]).cuda()
     label = np.random.randint(0, 2, GlobalConfig.BATCH_SIZE)
-    model = ViTHash(224, 16, num_classes=8).cuda()
+    model = ViTHash(224, 16).cuda()
     d, g, h = model(img)
     util.figureUtil.merge_pic(g, g, 'test.jpg')
     act_rate = helper.find_index(h, label)

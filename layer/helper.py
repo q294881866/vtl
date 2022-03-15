@@ -152,7 +152,6 @@ def hashmap_mean():
 
 def tensor_to_binary(x: Tensor):
     return (torch.sign(x) + 1) / 2
-    # return torch.sign(x)
 
 
 def compute_hamming_dist(a, b):

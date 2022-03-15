@@ -22,7 +22,7 @@ class Genesis:
         self.train_h = train_h
         self.setup()
         if self.train_h:
-            self.h = ViTHash(cfg.IMAGE_SIZE, cfg.PATCH_SIZE, num_classes=cfg.NUM_CLASSES, num_frames=cfg.NUM_FRAMES, hash_bits=cfg.HASH_BITS)
+            self.h = ViTHash(cfg.IMAGE_SIZE, cfg.PATCH_SIZE, num_frames=cfg.NUM_FRAMES, hash_bits=cfg.HASH_BITS)
         else:
             self.g = ConvTransGenerator()
         self._optimizer()
@@ -32,7 +32,7 @@ class Genesis:
         logger.info(f"will load:{path}")
         if self.train_h:
             path_net = path + str(self.cfg.HASH_BITS) + '_net_h.pth'
-            path_json = path + str(self.cfg.HASH_BITS) + '_hash.json'
+            path_json = path + helper.get_hash_json(self.cfg.HASH_BITS)
             self.h = self.multi_init(self.h, path_net, self.cfg.rank, self.cfg.device_ids)
             self.h.train()
             logger.info(f"loading:{path_json}")

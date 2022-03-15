@@ -6,13 +6,14 @@ from einops.layers.torch import Rearrange
 from config import BaseConfig
 from layer.block import Transformer, LinearBn, Attention, Residual
 from layer.helper import tensor_to_binary
+from layer.xception import XceptionFeature
 
 
-class FeatureNet(nn.Module):
+class SpacialTemporalViT(nn.Module):
     def __init__(self, image_size, patch_size, num_frames, dim=192, depth=4, heads=3,
             in_channels=3, dim_head=64, dropout=0.,
             emb_dropout=0., scale_dim=4, ):
-        super(FeatureNet, self).__init__()
+        super(SpacialTemporalViT, self).__init__()
 
         # split image to patch, embedded num_frames * patch
         assert image_size % patch_size == 0, 'Image dimensions must be divisible by the patch size.'
@@ -33,22 +34,14 @@ class FeatureNet(nn.Module):
         self.temporal_transformer = Transformer(dim, depth, heads, dim_head, dim * scale_dim, dropout)
 
         self.dropout = nn.Dropout(emb_dropout)
-        self.to_param = nn.Sequential(
-            Rearrange('b t d -> b d t'),
-            nn.Linear(num_frames + 1, in_channels * num_frames),
-            nn.GELU(),
-            Rearrange('b d t -> b t d')
-        )
 
     def forward(self, x):
-        # 从[b,16,3,224,224]->[b,16,3,7,32,7,32]->[b,16,7,7,32,32,3]=[b,16,49,32x32x3]
         x = self.to_patch_embedding(x)
         b, t, n, _ = x.shape
 
         space_tokens = repeat(self.space_token, '() n d -> b t n d', b=b, t=t)
         x = torch.cat((space_tokens, x), dim=2)
         x += self.pos_embedding[:, :, :(n + 1)]
-        x = self.dropout(x)
 
         x = rearrange(x, 'b t n d -> (b t) n d')
         x = self.space_transformer(x)
@@ -59,7 +52,7 @@ class FeatureNet(nn.Module):
 
         x = self.temporal_transformer(x)
 
-        return self.to_param(x)
+        return x.mean(1)
 
 
 class Discriminator(nn.Module):
@@ -94,15 +87,47 @@ class Discriminator(nn.Module):
 
 class ViTHash(nn.Module):
     def __init__(self, image_size, patch_size, num_frames=BaseConfig.NUM_FRAMES, hash_bits=BaseConfig.HASH_BITS,
-            dim=BaseConfig.ALL_DIM, num_classes=1):
+            dim=BaseConfig.ALL_DIM, cnn=True):
         super(ViTHash, self).__init__()
-        self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=6, heads=9)
-        self.hash_net = nn.Sequential(
-            Discriminator(dim, hash_bits),
-            nn.Tanh()
+        self.num_frames = num_frames
+        self.feature_exact = XceptionFeature()
+        if cnn:
+            dim = self.feature_exact.num_features
+            image_size = self.feature_exact.out_image_size
+            patch_size = 1
+        self.feature_vit = SpacialTemporalViT(image_size, patch_size, num_frames, dim=dim, in_channels=dim)
+        self.mlp_head = nn.Sequential(
+            nn.LayerNorm(dim),
+            nn.Linear(dim, hash_bits),
+            HashAct()
         )
 
     def forward(self, x):
+        x = rearrange(x, 'b t ... -> (b t) ...')
         x = self.feature_exact(x)
-        h = self.hash_net(x)
-        return tensor_to_binary(h)
+        x = rearrange(x, '(b t) ... -> b t ...', t=self.num_frames)
+        x = self.feature_vit(x)
+        h = self.mlp_head(x)
+        return h
+
+
+class HashAct(nn.Module):
+    def __init__(self, act='relu'):
+        super().__init__()
+        if act == 'relu':
+            self.act = nn.ReLU6()
+            self.cal = torch.sign
+        else:
+            self.act = nn.Tanh()
+            self.cal = tensor_to_binary
+
+    def forward(self, x):
+        x = self.act(x)
+        return self.cal(x)
+
+
+if __name__ == '__main__':
+    img = torch.randn((4, BaseConfig.NUM_FRAMES, 3, 224, 224))
+    net = ViTHash(7, 1)
+    x = net(img)
+    print(x.shape)
