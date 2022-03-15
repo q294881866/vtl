@@ -21,7 +21,7 @@ class BaseConfig:
     shuffle = True
     IS_DISTRIBUTION = False
     denormalize = None
-    HASH_BITS = 512
+    HASH_BITS = 64
     pretrained = ''
     type = ''
 
@@ -53,7 +53,7 @@ class FFConfig(BaseConfig):
     FRAMES_STEP = NUM_FRAMES // 2
     choice_idx = 0
     type = 'FF'
-    BATCH_SIZE = 6
+    BATCH_SIZE = 8
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)

@@ -142,6 +142,7 @@ class BaseVideoDataset(Dataset, metaclass=ABCMeta):
                     im = im.filter(ImageFilter.MedianFilter)
                 tensor = tensor_resize(self.cfg.loader(im).unsqueeze(0), self.cfg.IMAGE_SIZE)
             tensors.append(tensor)
+            im.close()
         data = torch.cat(tensors, dim=0)
         if self.cfg.image_based:
             data = torch.squeeze(data, dim=0)
