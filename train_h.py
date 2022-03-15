@@ -54,7 +54,6 @@ def train(cfg, dataloader_, test_loader_):
     genesis = Genesis(cfg, train_h=True)
 
     # running
-    test_itr = enumerate(test_loader_)
     for epoch in range(cfg.EPOCH):
         train_cache = TrainCache(size=32)
         _thread.start_new_thread(load_cache, (dataloader_, train_cache))
