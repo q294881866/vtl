@@ -97,10 +97,6 @@ class ViTHash(nn.Module):
             dim=BaseConfig.ALL_DIM, num_classes=1):
         super(ViTHash, self).__init__()
         self.feature_exact = FeatureNet(image_size, patch_size, num_frames, depth=6, heads=9)
-        self.discriminate = nn.Sequential(
-            Discriminator(dim, num_classes),
-            nn.Softmax(dim=1)
-        )
         self.hash_net = nn.Sequential(
             Discriminator(dim, hash_bits),
             nn.Tanh()
@@ -108,10 +104,5 @@ class ViTHash(nn.Module):
 
     def forward(self, x):
         x = self.feature_exact(x)
-        if self.training:
-            d = self.discriminate(x)
-            h = self.hash_net(x)
-            return d, tensor_to_binary(h)
-        else:
-            h = self.hash_net(x)
-            return tensor_to_binary(h)
+        h = self.hash_net(x)
+        return tensor_to_binary(h)

@@ -91,18 +91,14 @@ def test_step(genesis: Genesis, idx, epoch, test_itr, device):
 
 def train_h(genesis: Genesis, train_data, label, device):
     # train
-    d, h = genesis.h(train_data)
+    h = genesis.h(train_data)
     h_loss = hash_triplet_loss(h, label, device)
-    # d loss
-    d_label = get_tensor_target(label).to(device)
-    d_loss = bce_loss(d.flatten(), d_label.flatten())
-    d_h_loss = d_loss * 10 + h_loss
     # backward
     genesis.reset_grad()
-    d_h_loss.backward()
+    h_loss.backward()
     genesis.opt_h.step()
     genesis.scheduler_h.step()
-    return h_loss, d_loss
+    return h_loss, h_loss
 
 
 parser = argparse.ArgumentParser()
