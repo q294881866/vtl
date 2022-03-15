@@ -24,11 +24,11 @@ class BaseTrainItem:
 class TrainItem(BaseTrainItem):
     idx = 0
 
-    def __init__(self, label, hashes, mask):
+    def __init__(self, p1, p2, p3):
         super(TrainItem, self).__init__()
-        self.label = label
-        self.hashes = hashes
-        self.mask = mask
+        self.p1 = p1
+        self.p2 = p2
+        self.p3 = p3
 
 
 class TrainCache:
@@ -160,9 +160,10 @@ def get_dataloader(dataset, cfg):
     else:
         train_sampler = None
     dataloader = tud.DataLoader(dataset=dataset,
-                                num_workers=min(os.cpu_count(), cfg.BATCH_SIZE),
+                                num_workers=0,
                                 batch_size=cfg.BATCH_SIZE, shuffle=cfg.shuffle,
                                 sampler=train_sampler,
+                                pin_memory=True
                                 )
     return dataloader
 

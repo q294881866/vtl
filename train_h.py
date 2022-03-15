@@ -6,7 +6,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from config import DFTLConfig, Davis2016Config, FFConfig, BaseConfig
+from config import DFTLConfig, Davis2016Config, FFConfig
 from dataset.Base import TrainItem, get_dataloader, TrainCache, load_cache
 from dataset.DFTL import DFTLDataset
 from dataset.Davis2016TL import Davis2016Dataset
@@ -52,36 +52,37 @@ def get_tensor_target(labels: []):
 def train(cfg, dataloader_, test_loader_):
     # init
     genesis = Genesis(cfg, train_h=True)
-    device = genesis.device
 
     # running
     test_itr = enumerate(test_loader_)
     for epoch in range(cfg.EPOCH):
         train_cache = TrainCache(size=32)
         _thread.start_new_thread(load_cache, (dataloader_, train_cache))
+        test_cache = TrainCache(size=4)
+        _thread.start_new_thread(load_cache, (test_loader_, test_cache))
         while not train_cache.finished:
             if train_cache.has_item():
                 idx, item = train_cache.next_data()
-                train_step(genesis, item, idx, epoch, device)
-                test_step(genesis, idx, epoch, test_itr, device)
+                train_step(genesis, item, idx, epoch, genesis.device)
+                test_step(genesis, idx, epoch, test_cache, genesis.device)
 
 
 def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     # HashNet
-    hashes = cb2b(item.hashes, device)
-    loss_h, loss_d = train_h(genesis, hashes, item.label, device)
+    hashes = cb2b(item.p2, device)
+    loss_h, loss_d = train_h(genesis, hashes, item.p1, device)
     # epoch log
     logger.info(f"Train Epoch:{epoch}/{idx},H Loss:{loss_h.item():.5f}, D Loss:{loss_d.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
 
 
-def test_step(genesis: Genesis, idx, epoch, test_itr, device):
-    if idx % 100 == 0:
+def test_step(genesis: Genesis, idx, epoch, test_cache, device):
+    if idx % 100 == 0 and test_cache.has_item():
         genesis.eval()
-        _, (label, _, _, fake, _) = test_itr.__next__()
-        # HashNet
-        fakes = cb2b(fake, device)
+        idx, item = test_cache.next_data()
+        e: TrainItem = item
+        fakes = cb2b(e.p3, device)
         h = genesis.h(fakes)
-        acc = helper.find_index(h, label)
+        acc = helper.find_index(h, e.p1)
         # epoch log
         logger.info("Test :{}/{}, acc:{:.5f}".format(epoch, idx, acc))
         genesis.save(f'model/{genesis.cfg.type}_{epoch}_{idx}_')
@@ -122,11 +123,4 @@ if __name__ == '__main__':
     dataset = Dataset(cfg=test_cfg)
     test_loader = get_dataloader(dataset=dataset, cfg=test_cfg)
 
-    if args_.type == 'DFTL':
-        num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN))
-    elif args_.type == 'Davis2016':
-        num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN, 'src'))
-    elif args_.type == 'FF':
-        num_classes = load_label_classes(os.path.join(args_.path, BaseConfig.TRAIN, 'src'))
-    train_cfg.NUM_CLASSES = num_classes
     train(train_cfg, dataloader, test_loader)

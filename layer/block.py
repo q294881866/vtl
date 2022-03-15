@@ -222,15 +222,50 @@ class Residual(torch.nn.Module):
 
 def conv_blocks(n, activation=nn.GELU, in_channels=3):
     return torch.nn.Sequential(
-        nn.Conv2d(in_channels, n // 8, 3, 2, 1),
-        nn.BatchNorm2d(n // 8),
+        ResnetBlock(in_channels, n // 8),
         activation(),
-        nn.Conv2d(n // 8, n // 4, 3, 2, 1),
-        nn.BatchNorm2d(n // 4),
+        ResnetBlock(n // 8, n // 4),
         activation(),
-        nn.Conv2d(n // 4, n // 2, 3, 2, 1),
-        nn.BatchNorm2d(n // 2),
+        ResnetBlock(n // 4, n // 2),
         activation(),
-        nn.Conv2d(n // 2, n, 3, 2, 1),
-        nn.BatchNorm2d(n)
-    )
+        ResnetBlock(n // 2, n))
+
+
+class Conv2d_BN(torch.nn.Sequential):
+    def __init__(self, a, b, ks=1, stride=1, pad=0, dilation=1,
+            groups=1, bn_weight_init=1):
+        super().__init__()
+        self.c = torch.nn.Conv2d(a, b, ks, stride, pad, dilation, groups, bias=False)
+        self.bn = torch.nn.BatchNorm2d(b, momentum=0.1)
+        torch.nn.init.constant_(self.bn.weight, bn_weight_init)
+        torch.nn.init.constant_(self.bn.bias, 0)
+
+    def forward(self, x):
+        x = self.c(x)
+        x = self.bn(x)
+        return x
+
+
+class ResnetBlock(nn.Module):
+    expansion = 2
+
+    def __init__(self, inplanes, planes, stride=1):
+        super(ResnetBlock, self).__init__()
+        self.conv1 = Conv2d_BN(inplanes, inplanes * self.expansion)
+        self.conv2 = Conv2d_BN(inplanes * self.expansion, inplanes * self.expansion, 3, 1, 1)
+        self.conv3 = Conv2d_BN(inplanes * self.expansion, inplanes)
+        self.stride = stride
+        self.up = Conv2d_BN(inplanes, planes, 3, 2, 1)
+
+    def forward(self, x):
+        residual = x
+        out = self.conv1(x)
+        out = self.conv2(out)
+        out = self.conv3(out)
+        out += residual
+
+        return self.up(out)
+
+
+
+

@@ -10,7 +10,7 @@ from torch.optim.lr_scheduler import ExponentialLR
 
 from config import BaseConfig
 from layer import helper
-from layer.localizator import ConvTransGenerator
+from layer.localizator import Localizator
 from layer.vit_hash import ViTHash
 from util.logUtil import logger
 
@@ -24,7 +24,7 @@ class Genesis:
         if self.train_h:
             self.h = ViTHash(cfg.IMAGE_SIZE, cfg.PATCH_SIZE, num_frames=cfg.NUM_FRAMES, hash_bits=cfg.HASH_BITS)
         else:
-            self.g = ConvTransGenerator()
+            self.g = Localizator()
         self._optimizer()
         self.init(cfg.pretrained)
 

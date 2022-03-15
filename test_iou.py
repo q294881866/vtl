@@ -2,18 +2,18 @@ import math
 import os
 import time
 
+import GlobalConfig
 import torch
 from PIL import Image
 from einops import rearrange
 from torch import Tensor
 
-import GlobalConfig
 from dataset.DFTL import get_dataloader
 from dataset.Davis2016TL import get_inpainting_dataloader
 from dmac.test_dmac import get_dmac, test_dmac
 from layer import helper
 from layer.helper import to_image
-from layer.localizator import ConvTransGenerator
+from layer.localizator import Localizator
 from util.logUtil import logger
 
 device = torch.device("cuda:0")
@@ -33,7 +33,7 @@ def to_vrf_masks(outs):
 
 def test_g(data_type: int, path, test_op=-1):
     dmac = get_dmac(device, r'./model/DMAC-adv.pth')
-    net_g = ConvTransGenerator()
+    net_g = Localizator()
     if data_type == 0:
         dataloader = get_dataloader(set_path=os.path.join(path, GlobalConfig.TEST),
                                     batch_size=1,

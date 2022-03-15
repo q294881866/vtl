@@ -9,7 +9,7 @@ from layer.block import Transformer, Residual, LeFF, UpperSample, conv_blocks
 
 class ConvEncoder(nn.Module):
     def __init__(self, num_frames=BaseConfig.NUM_FRAMES, in_channels=3,
-                 hidden_size=14, dim=192, depth=8, heads=6, dim_head=64, dropout=0., scale_dim=4, ):
+            hidden_size=14, dim=512, depth=8, heads=6, dim_head=64, dropout=0., scale_dim=4, ):
         super(ConvEncoder, self).__init__()
 
         self.to_conv_embedding = nn.Sequential(
@@ -42,7 +42,7 @@ class ConvEncoder(nn.Module):
 
 class ConvDecoder(nn.Module):
     def __init__(self, image_size=224, num_frames=BaseConfig.NUM_FRAMES,
-                 hidden_size=14, dim=192, depth=8, heads=6, dim_head=64, dropout=0., scale_dim=4, ):
+            hidden_size=14, dim=192, depth=8, heads=6, dim_head=64, dropout=0., scale_dim=4, ):
         super(ConvDecoder, self).__init__()
         self.image_size = image_size
         self.num_frames = num_frames
@@ -79,11 +79,11 @@ class ConvDecoder(nn.Module):
         return x
 
 
-class ConvTransGenerator(nn.Module):
-    def __init__(self):
-        super(ConvTransGenerator, self).__init__()
-        self.encode = ConvEncoder()
-        self.decode = ConvDecoder()
+class Localizator(nn.Module):
+    def __init__(self, dim=512):
+        super(Localizator, self).__init__()
+        self.encode = ConvEncoder(dim=dim)
+        self.decode = ConvDecoder(dim=dim)
 
     def forward(self, x):
         src = self.encode(x[0])
@@ -91,3 +91,10 @@ class ConvTransGenerator(nn.Module):
         x = src + fake
         x = self.decode(x)
         return x
+
+
+if __name__ == '__main__':
+    img = torch.randn((2, 4, BaseConfig.NUM_FRAMES, 3, 224, 224))
+    net = Localizator(512)
+    x = net(img)
+    print(x.shape)

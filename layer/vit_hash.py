@@ -117,9 +117,12 @@ class HashAct(nn.Module):
         if act == 'relu':
             self.act = nn.ReLU6()
             self.cal = torch.sign
-        else:
+        elif act == 'tahn':
             self.act = nn.Tanh()
             self.cal = tensor_to_binary
+        else:
+            self.act = nn.Identity()
+            self.cal = torch.sign
 
     def forward(self, x):
         x = self.act(x)

@@ -4,7 +4,7 @@ import torch
 import util.figureUtil
 from layer import helper
 from layer.genesis import ViTHash
-from layer.localizator import ConvTransGenerator
+from layer.localizator import Localizator
 from util import figureUtil
 
 
@@ -12,7 +12,7 @@ def test_trans_generator():
     src = torch.randn([GlobalConfig.BATCH_SIZE, GlobalConfig.NUM_FRAME, 3, 224, 224])
     fake = torch.randn([GlobalConfig.BATCH_SIZE, GlobalConfig.NUM_FRAME, 3, 224, 224])
 
-    model = ConvTransGenerator()
+    model = Localizator()
     out = model([src, fake])
     figureUtil.merge_pic(out, out, 'test.jpg')
     print(out.shape)

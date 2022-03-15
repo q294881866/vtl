@@ -11,7 +11,7 @@ from dataset.DFTL import get_dataloader
 from dataset.Davis2016TL import get_inpainting_dataloader
 from layer import helper
 from layer.helper import tensor_to_binary, compute_hamming_dist, to_image
-from layer.localizator import ConvTransGenerator
+from layer.localizator import Localizator
 from layer.vit_hash import ViTHash
 from train_g import load_label_classes
 from util.logUtil import logger
@@ -31,7 +31,7 @@ def test(data_type: int, path, test_op, hash_bits):
         net_h.load_state_dict(torch.load('./model/deepfake/' + str(hash_bits) + '_net_h.pth', map_location=device))
         load_map('./model/deepfake/' + str(hash_bits) + '_hash.json')
         # generator
-        net_g = ConvTransGenerator()
+        net_g = Localizator()
         net_g.load_state_dict(torch.load('./model/deepfake/net_g.pth', map_location=device))
     else:
         dataloader = get_inpainting_dataloader(set_path=os.path.join(path, GlobalConfig.TEST),
@@ -42,7 +42,7 @@ def test(data_type: int, path, test_op, hash_bits):
         net_h.load_state_dict(torch.load('./model/inpainting/' + str(hash_bits) + '_net_h.pth', map_location=device))
         load_map('./model/inpainting/' + str(hash_bits) + '_hash.json')
         # generator
-        net_g = ConvTransGenerator()
+        net_g = Localizator()
         net_g.load_state_dict(torch.load('./model/inpainting/net_g.pth', map_location=device))
     net_h = net_h.to(device)
     net_h.eval()

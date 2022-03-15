@@ -19,29 +19,22 @@ class FFDataset(BaseVideoDataset):
 
     def __getitem__(self, index):
         files, video_data = self.getitem(index)
-        if self.cfg.mode == self.cfg.TRAIN:
+        i = random.randint(-3, 100)
+        src = self.read_data(video_data.src_dir, files, op=i)
+        if self.cfg.train_h:
             video_data: DataItem = video_data
-            i = random.randint(-3, 100)
-            src = self.read_data(video_data.src_dir, files, op=i)
-            hashes, masks = [src], [0, 1]
+            hashes = [src]
             for j in range(2):
                 fake_idx = random.randint(0, 100) % len(video_data.fake_dir)
                 fake_data = self.read_data(video_data.fake_dir[fake_idx], files, op=i)
                 hashes.append(fake_data)
-                if self.mask:
-                    masks[j] = self.read_data(video_data.mask_dir[fake_idx], files, mask=True, op=i)
-            return video_data.label, torch.cat(hashes, dim=0), masks
+            return video_data.label, torch.cat(hashes, dim=0), hashes[1]
         else:
             idx = random.randint(0, 100) % len(video_data.fake_dir)
             fake_dir = video_data.fake_dir[idx]
-            src_file = os.path.join(video_data.src_dir, files[0])
-            fake_file = os.path.join(fake_dir, files[0])
-            if self.mask:
-                mask = self.read_data(video_data.mask_dir[idx], files, mask=True)
-            else:
-                mask = 0
-            fake = self.read_data(fake_dir, files)
-            return video_data.label, src_file, fake_file, fake, mask
+            mask = self.read_data(video_data.mask_dir[idx], files, mask=True, op=i)
+            fake = self.read_data(fake_dir, files, op=i)
+            return src, fake, mask
 
     def _load_data(self):
         start = 0
