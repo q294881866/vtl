@@ -29,24 +29,27 @@ def make_splicing():
             mark_files = os.listdir(mark_dir)
             scale = random.randint(5, 10) / 10
             pos = (random.randint(200, 700), random.randint(150, 350))
-            if len(files) <= len(mark_files) and count < 4:
-                count += 1
-                for i in range(len(files)):
+            file_nums = min(len(files), len(mark_files))
+
+            save_dir = os.path.join(fake_path, item, mark)
+            save_mask_dir = os.path.join(mask_path, item, mark)
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+            if not os.path.exists(save_mask_dir):
+                os.makedirs(save_mask_dir)
+            try:
+                for i in range(file_nums):
                     file = files[i]
                     target_file = os.path.join(item_path, file)
-                    save_dir = os.path.join(fake_path, item, mark)
-                    save_mask_dir = os.path.join(mask_path, item, mark)
-
                     mark_file = mark_files[i]
                     mask_file = os.path.join(mask_dir, mark_file)
                     source_file = os.path.join(mark_dir, mark_file)
-                    if not os.path.exists(save_dir):
-                        os.makedirs(save_dir)
-                    if not os.path.exists(save_mask_dir):
-                        os.makedirs(save_mask_dir)
 
                     sync_mask(source_file, mask_file, target_file, os.path.join(save_dir, file), os.path.join(save_mask_dir, file), scale, pos)
                     print("Finished processing input {k}.".format(k=source_file))
+            except:
+                os.system(f'rm -rf {save_dir}')
+                os.system(f'rm -rf {save_mask_dir}')
 
 
 def sync_mask(source, mask, target, save_file, save_mask_file, scale, pos):

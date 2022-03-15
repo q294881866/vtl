@@ -3,7 +3,6 @@ import random
 
 import torch
 
-from config import BaseConfig
 from dataset.Base import BaseVideoDataset
 from dataset.DFTL import DataItem
 
@@ -36,22 +35,19 @@ class Davis2016Dataset(BaseVideoDataset):
 
     def __getitem__(self, index):
         files, video_data = self.getitem(index)
-        if self.cfg.mode == BaseConfig.TRAIN:
+        i = random.randint(-3, 100)
+        src = self.read_data(video_data.src_dir, files, op=i)
+        if self.cfg.train_h:
             video_data: DataItem = video_data
-            i = random.randint(-3, 100)
-            src = self.read_data(video_data.src_dir, files, op=i)
             hashes = [src]
-            for _ in range(2):
+            for j in range(2):
                 fake_idx = random.randint(0, 100) % len(video_data.fake_dir)
                 fake_data = self.read_data(video_data.fake_dir[fake_idx], files, op=i)
                 hashes.append(fake_data)
-            mask_data = self.read_data(video_data.mask_dir, files, mask=True, op=i)
-            return video_data.label, torch.cat(hashes, dim=0), mask_data
+            return video_data.label, torch.cat(hashes, dim=0), hashes[1]
         else:
-            fake_idx = random.randint(0, 100) % len(video_data.fake_dir)
-            fake_dir = video_data.fake_dir[fake_idx]
-            src_file = os.path.join(video_data.src_dir, files[0])
-            fake_file = os.path.join(fake_dir, files[0])
-            mask = self.read_data(video_data.mask_dir, files, mask=True)
-            fake = self.read_data(fake_dir, files)
-            return video_data.label, src_file, fake_file, fake, mask
+            idx = random.randint(0, 100) % len(video_data.fake_dir)
+            fake_dir = video_data.fake_dir[idx]
+            mask = self.read_data(video_data.mask_dir[idx], files, mask=True, op=i)
+            fake = self.read_data(fake_dir, files, op=i)
+            return src, fake, mask
