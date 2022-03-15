@@ -12,7 +12,7 @@ from dataset.DFTL import DFTLDataset
 from dataset.Davis2016TL import Davis2016Dataset
 from dataset.FF import FFDataset
 from layer import helper
-from layer.fn import HashTripletLoss
+from layer.fn import hash_triplet_loss
 from layer.genesis import Genesis
 from layer.helper import cb2b
 from util.logUtil import logger
@@ -92,7 +92,7 @@ def test_step(genesis: Genesis, idx, epoch, test_itr, device):
 def train_h(genesis: Genesis, train_data, label, device):
     # train
     h = genesis.h(train_data)
-    h_loss = HashTripletLoss(label, device)
+    h_loss = hash_triplet_loss(label, device)
     # backward
     genesis.reset_grad()
     h_loss.backward()
