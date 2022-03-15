@@ -99,7 +99,7 @@ class ViTHash(nn.Module):
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(dim),
             nn.Linear(dim, hash_bits),
-            HashAct(act='tahn')
+            HashAct(act='none')
         )
 
     def forward(self, x):

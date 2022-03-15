@@ -93,12 +93,12 @@ def test_step(genesis: Genesis, idx, epoch, test_cache, device):
 def train_h(genesis: Genesis, train_data, label, device):
     # train
     h = genesis.h(train_data)
-    h_loss = hash_triplet_loss(label, device)
+    h_loss = hash_triplet_loss(h, label, device)
     # backward
     genesis.reset_grad()
     h_loss.backward()
     genesis.opt_h.step()
-    genesis.scheduler_h.step()
+    # genesis.scheduler_h.step()
     return h_loss, h_loss
 
 
