@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 from torch import distributed as dist
 from torch.nn.parallel import DistributedDataParallel
+from torch.optim.lr_scheduler import ExponentialLR
 
 from config import BaseConfig
 from layer import helper
@@ -42,9 +43,9 @@ class Genesis:
 
     def _optimizer(self):
         if self.train_h:
-            self.opt_h = torch.optim.Adam(self.h.parameters(), lr=self.cfg.base_lr)
-            # self.opt_h = self.optimizer_sgd(self.h, self.cfg.base_lr)
-            # self.scheduler_h = ExponentialLR(self.opt_h, gamma=0.99)
+            # self.opt_h = torch.optim.Adam(self.h.parameters(), lr=self.cfg.base_lr)
+            self.opt_h = self.optimizer_sgd(self.h, self.cfg.base_lr)
+            self.scheduler_h = ExponentialLR(self.opt_h, gamma=0.99)
         else:
             self.opt_g = torch.optim.Adam(self.g.parameters(), lr=self.cfg.base_lr)
 
