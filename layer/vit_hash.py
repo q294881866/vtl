@@ -1,10 +1,12 @@
+import numpy as np
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from einops import repeat, rearrange
 from einops.layers.torch import Rearrange
 
 from config import BaseConfig
-from layer.block import Transformer, LinearBn, Attention, Residual
+from layer.block import Transformer
 from layer.helper import tensor_to_binary
 from layer.xception import XceptionFeature
 
@@ -25,64 +27,39 @@ class SpacialTemporalViT(nn.Module):
         )
 
         # space feature
-        self.pos_embedding = nn.Parameter(torch.randn(1, num_frames, num_patches + 1, dim))
-        self.space_token = nn.Parameter(torch.randn(1, 1, dim))
+        self.pos_embedding = nn.Parameter(torch.randn(1, num_frames, num_patches, dim))
         self.space_transformer = Transformer(dim, depth, heads, dim_head, dim * scale_dim, dropout)
 
         # temporal feature
-        self.temporal_token = nn.Parameter(torch.randn(1, 1, dim))
+        self.temporal_token = nn.Parameter(torch.randn(1, num_frames, dim))
         self.temporal_transformer = Transformer(dim, depth, heads, dim_head, dim * scale_dim, dropout)
 
         self.dropout = nn.Dropout(emb_dropout)
 
+    def logits(self, x, t, n):
+        h = int(np.sqrt(n))
+        x = rearrange(x, 'b (h w) d -> b d h w', h=h)
+        x = F.adaptive_avg_pool2d(x, (1, 1))
+        x = x.view(x.size(0), -1)
+        x = rearrange(x, '(b t) d -> b t d', t=t)
+        return x
+
     def forward(self, x):
         x = self.to_patch_embedding(x)
-        b, t, n, _ = x.shape
+        b, t, n, d = x.shape
 
-        space_tokens = repeat(self.space_token, '() n d -> b t n d', b=b, t=t)
-        x = torch.cat((space_tokens, x), dim=2)
-        x += self.pos_embedding[:, :, :(n + 1)]
+        x = x + self.pos_embedding
 
         x = rearrange(x, 'b t n d -> (b t) n d')
         x = self.space_transformer(x)
-        x = rearrange(x[:, 0], '(b t) ... -> b t ...', b=b)
 
+        x = self.logits(x, t, n)
         temporal_tokens = repeat(self.temporal_token, '() n d -> b n d', b=b)
-        x = torch.cat((temporal_tokens, x), dim=1)
+        x = x + temporal_tokens
 
         x = self.temporal_transformer(x)
 
         return x.mean(1)
-
-
-class Discriminator(nn.Module):
-    def __init__(self, dim, num_classes=2, depth=4):
-        super(Discriminator, self).__init__()
-        self.blocks = []
-        for i in range(1, depth):
-            in_dim = dim // 2 * (1 + i)
-            out_dim = dim // 2 * (2 + i)
-            self.blocks.append(
-                Residual(nn.Sequential(
-                    LinearBn(in_dim, in_dim * 2),
-                    nn.Hardswish(),
-                    LinearBn(in_dim * 2, in_dim),
-                ), 0.))
-            if i < depth - 1:
-                self.blocks.append(Attention(
-                    in_dim, out_dim))
-        self.blocks = torch.nn.Sequential(*self.blocks)
-
-        self.mlp_head = nn.Sequential(
-            nn.LayerNorm(dim // 2 * 4),
-            nn.Linear(dim // 2 * 4, num_classes),
-        )
-
-    def forward(self, x):
-        x = self.blocks(x)
-        x = x.mean(dim=1)
-        x = self.mlp_head(x)
-        return x
 
 
 class ViTHash(nn.Module):
@@ -99,7 +76,7 @@ class ViTHash(nn.Module):
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(dim),
             nn.Linear(dim, hash_bits),
-            HashAct(act='none')
+            HashAct(act='tahn')
         )
 
     def forward(self, x):
@@ -122,7 +99,7 @@ class HashAct(nn.Module):
             self.cal = tensor_to_binary
         else:
             self.act = nn.Identity()
-            self.cal = torch.sign
+            self.cal = tensor_to_binary
 
     def forward(self, x):
         x = self.act(x)
