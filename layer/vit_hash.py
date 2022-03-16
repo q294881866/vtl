@@ -6,15 +6,14 @@ from einops import repeat, rearrange
 from einops.layers.torch import Rearrange
 
 from config import BaseConfig
-from layer.block import Transformer
+from layer.block import Transformer, Residual, LinearBn, Attention
 from layer.helper import tensor_to_binary
-from layer.xception import XceptionFeature
 
 
 class SpacialTemporalViT(nn.Module):
     def __init__(self, image_size, patch_size, num_frames, dim=192, depth=4, heads=3,
             in_channels=3, dim_head=64, dropout=0.,
-            emb_dropout=0., scale_dim=4, ):
+            emb_dropout=0.1, scale_dim=4, ):
         super(SpacialTemporalViT, self).__init__()
 
         # split image to patch, embedded num_frames * patch
@@ -28,6 +27,7 @@ class SpacialTemporalViT(nn.Module):
 
         # space feature
         self.pos_embedding = nn.Parameter(torch.randn(1, num_frames, num_patches, dim))
+        self.space_token = nn.Parameter(torch.randn(1, num_patches, dim))
         self.space_transformer = Transformer(dim, depth, heads, dim_head, dim * scale_dim, dropout)
 
         # temporal feature
@@ -48,7 +48,10 @@ class SpacialTemporalViT(nn.Module):
         x = self.to_patch_embedding(x)
         b, t, n, d = x.shape
 
+        space_tokens = repeat(self.space_token, '() n d -> b t n d', b=b, t=t)
+        x = x + space_tokens
         x = x + self.pos_embedding
+        x = self.dropout(x)
 
         x = rearrange(x, 'b t n d -> (b t) n d')
         x = self.space_transformer(x)
@@ -58,33 +61,56 @@ class SpacialTemporalViT(nn.Module):
         x = x + temporal_tokens
 
         x = self.temporal_transformer(x)
+        x = self.dropout(x)
 
-        return x.mean(1)
+        return x
 
 
-class ViTHash(nn.Module):
-    def __init__(self, image_size, patch_size, num_frames=BaseConfig.NUM_FRAMES, hash_bits=BaseConfig.HASH_BITS,
-            dim=BaseConfig.ALL_DIM, cnn=True):
-        super(ViTHash, self).__init__()
-        self.num_frames = num_frames
-        self.feature_exact = XceptionFeature()
-        if cnn:
-            dim = self.feature_exact.num_features
-            image_size = self.feature_exact.out_image_size
-            patch_size = 1
-        self.feature_vit = SpacialTemporalViT(image_size, patch_size, num_frames, dim=dim, in_channels=dim)
+class Discriminator(nn.Module):
+    def __init__(self, dim, num_classes=2, depth=4):
+        super(Discriminator, self).__init__()
+        self.blocks = []
+        for i in range(1, depth):
+            in_dim = dim // 2 * (1 + i)
+            out_dim = dim // 2 * (2 + i)
+            self.blocks.append(
+                Residual(nn.Sequential(
+                    LinearBn(in_dim, in_dim * 2),
+                    nn.Hardswish(),
+                    LinearBn(in_dim * 2, in_dim),
+                ), 0.))
+            if i < depth - 1:
+                self.blocks.append(Attention(
+                    in_dim, out_dim))
+            else:
+                self.blocks.append(Attention(
+                    in_dim, dim))
+        self.blocks = torch.nn.Sequential(*self.blocks)
+
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(dim),
-            nn.Linear(dim, hash_bits),
+            nn.Linear(dim, num_classes),
             HashAct(act='tahn')
         )
 
     def forward(self, x):
-        x = rearrange(x, 'b t ... -> (b t) ...')
-        x = self.feature_exact(x)
-        x = rearrange(x, '(b t) ... -> b t ...', t=self.num_frames)
+        x = self.blocks(x)
+        x = x.mean(dim=1)
+        x = self.mlp_head(x)
+        return x
+
+
+class ViTHash(nn.Module):
+    def __init__(self, image_size=224, patch_size=16, num_frames=BaseConfig.NUM_FRAMES, hash_bits=BaseConfig.HASH_BITS,
+            dim=BaseConfig.ALL_DIM, ):
+        super(ViTHash, self).__init__()
+        self.num_frames = num_frames
+        self.feature_vit = SpacialTemporalViT(image_size, patch_size, num_frames, dim=dim)
+        self.discriminator = Discriminator(dim, num_classes=hash_bits)
+
+    def forward(self, x):
         x = self.feature_vit(x)
-        h = self.mlp_head(x)
+        h = self.discriminator(x)
         return h
 
 
@@ -108,6 +134,6 @@ class HashAct(nn.Module):
 
 if __name__ == '__main__':
     img = torch.randn((4, BaseConfig.NUM_FRAMES, 3, 224, 224))
-    net = ViTHash(7, 1)
+    net = ViTHash()
     x = net(img)
     print(x.shape)
