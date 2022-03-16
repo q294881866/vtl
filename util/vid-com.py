@@ -1,11 +1,8 @@
 import os
 import random
+import sys
 
 import cv2
-
-source_path = '/ssd1/data/lwl/manual/SOURCE'
-jpg_path = '/ssd1/data/lwl/manual/JPEGImages'
-annotations_path = '/ssd1/data/lwl/manual/Annotations'
 
 fake_path = './fake'
 mask_path = './mask'
@@ -18,15 +15,15 @@ if not os.path.isdir(mask_path):
     os.makedirs(mask_path)
 
 
-def make_splicing():
+def make_splicing(source_path, jpg_path, annotations_path):
     for item in os.listdir(source_path):
         item_path = os.path.join(source_path, item)
-        files = os.listdir(item_path)
+        files = sorted(os.listdir(item_path))
         count = 0
         for mark in os.listdir(jpg_path):
             mark_dir = os.path.join(jpg_path, mark)
             mask_dir = os.path.join(annotations_path, mark)
-            mark_files = os.listdir(mark_dir)
+            mark_files = sorted(os.listdir(mark_dir))
             scale = random.randint(5, 10) / 10
             pos = (random.randint(200, 700), random.randint(150, 350))
             file_nums = min(len(files), len(mark_files))
@@ -134,4 +131,4 @@ def sync_mask(source, mask, target, save_file, save_mask_file, scale, pos):
 
 
 if __name__ == '__main__':
-    make_splicing()
+    make_splicing(sys.argv[1],sys.argv[2],sys.argv[3])
