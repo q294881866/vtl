@@ -21,7 +21,7 @@ class BaseConfig:
     shuffle = True
     IS_DISTRIBUTION = False
     denormalize = None
-    HASH_BITS = 64
+    HASH_BITS = 512
     pretrained = ''
     type = ''
     train_h = True
