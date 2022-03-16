@@ -75,6 +75,7 @@ class Davis2016Config(BaseConfig):
     NUM_FRAMES = 4
     FRAMES_STEP = 1
     type = 'Davis2016'
+    BATCH_SIZE = 6
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)
