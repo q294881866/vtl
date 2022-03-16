@@ -6,11 +6,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from config import DFTLConfig, Davis2016Config, FFConfig, BaseConfig
+from config import DFTLConfig, Davis2016Config, FFConfig, BaseConfig, SplicingConfig
 from dataset.Base import TrainItem, get_dataloader, TrainCache, load_cache
 from dataset.DFTL import DFTLDataset
 from dataset.Davis2016TL import Davis2016Dataset
 from dataset.FF import FFDataset
+from dataset.splicing import SplicingDataset
 from layer import helper
 from layer.fn import hash_triplet_loss
 from layer.genesis import Genesis
@@ -24,6 +25,7 @@ choices = {
     'DFTL': (DFTLDataset, DFTLConfig),
     'Davis2016': (Davis2016Dataset, Davis2016Config),
     'FF': (FFDataset, FFConfig),
+    'Splicing': (SplicingDataset, SplicingConfig),
 }
 
 

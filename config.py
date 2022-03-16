@@ -60,6 +60,17 @@ class FFConfig(BaseConfig):
         super().__init__(mode, set_path, checkpoint, rank)
 
 
+class SplicingConfig(BaseConfig):
+    NUM_FRAMES = 4
+    FRAMES_STEP = 1
+    choice_idx = 0
+    type = 'Splicing'
+    BATCH_SIZE = 8
+
+    def __init__(self, mode, set_path, checkpoint, rank):
+        super().__init__(mode, set_path, checkpoint, rank)
+
+
 class Davis2016Config(BaseConfig):
     NUM_FRAMES = 4
     FRAMES_STEP = 1
