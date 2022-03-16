@@ -61,6 +61,7 @@ class DataItem(object):
         self.src_dir = src
         self.mask_dir = mask
         self.fake_dir = fake
+        print(f'{src}-{mask}-{fake}')
         self.files = sorted(os.listdir(self.src_dir))
         length_files = len(self.files)
         if isinstance(self.fake_dir, list):
