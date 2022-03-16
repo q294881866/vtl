@@ -27,7 +27,7 @@ def test(data_type: int, path, test_op, hash_bits):
                                     batch_size=1,
                                     mode=GlobalConfig.TEST, test_op=test_op)
         num_classes = load_label_classes(os.path.join(path, GlobalConfig.TRAIN))
-        net_h = ViTHash(224, GlobalConfig.PATCH_SIZE, hash_bits=hash_bits)
+        net_h = ViTHash(hash_bits=hash_bits)
         net_h.load_state_dict(torch.load('./model/deepfake/' + str(hash_bits) + '_net_h.pth', map_location=device))
         load_map('./model/deepfake/' + str(hash_bits) + '_hash.json')
         # generator
@@ -38,7 +38,7 @@ def test(data_type: int, path, test_op, hash_bits):
                                                batch_size=1,
                                                mode=GlobalConfig.TEST, test_op=test_op)
         num_classes = load_label_classes(os.path.join(path, GlobalConfig.TRAIN, 'src'))
-        net_h = ViTHash(224, GlobalConfig.PATCH_SIZE, hash_bits=hash_bits)
+        net_h = ViTHash(hash_bits=hash_bits)
         net_h.load_state_dict(torch.load('./model/inpainting/' + str(hash_bits) + '_net_h.pth', map_location=device))
         load_map('./model/inpainting/' + str(hash_bits) + '_hash.json')
         # generator

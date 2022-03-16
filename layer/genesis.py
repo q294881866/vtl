@@ -21,7 +21,7 @@ class Genesis:
         self.train_h = train_h
         self.setup()
         if self.train_h:
-            self.h = ViTHash(cfg.IMAGE_SIZE, cfg.PATCH_SIZE, num_frames=cfg.NUM_FRAMES, hash_bits=cfg.HASH_BITS)
+            self.h = ViTHash(num_frames=cfg.NUM_FRAMES, hash_bits=cfg.HASH_BITS)
         else:
             self.g = Localizator()
         self._optimizer()

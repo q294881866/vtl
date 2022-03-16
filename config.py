@@ -14,7 +14,7 @@ class BaseConfig:
     NUM_FRAMES = 4
     BATCH_SIZE = 8
     FRAMES_STEP = 1
-    ALL_DIM = 192
+    ALL_DIM = 128
     base_lr = 1e-4
     image_based = True
     device_ids = [0, 1]
@@ -54,7 +54,7 @@ class FFConfig(BaseConfig):
     FRAMES_STEP = NUM_FRAMES // 2
     choice_idx = 0
     type = 'FF'
-    BATCH_SIZE = 8
+    BATCH_SIZE = 2
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)
