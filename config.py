@@ -21,7 +21,7 @@ class BaseConfig:
     shuffle = True
     IS_DISTRIBUTION = False
     denormalize = None
-    HASH_BITS = 512
+    HASH_BITS = 1024
     pretrained = ''
     type = ''
     train_h = True
@@ -75,6 +75,7 @@ class Davis2016Config(BaseConfig):
     NUM_FRAMES = 4
     FRAMES_STEP = 1
     type = 'Davis2016'
+    BATCH_SIZE = 16
 
     def __init__(self, mode, set_path, checkpoint, rank):
         super().__init__(mode, set_path, checkpoint, rank)
