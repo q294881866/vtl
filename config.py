@@ -21,7 +21,7 @@ class BaseConfig:
     shuffle = True
     IS_DISTRIBUTION = False
     denormalize = None
-    HASH_BITS = 1024
+    HASH_BITS = 512
     pretrained = ''
     type = ''
     train_h = True
@@ -72,7 +72,7 @@ class SplicingConfig(BaseConfig):
 
 
 class Davis2016Config(BaseConfig):
-    NUM_FRAMES = 4
+    NUM_FRAMES = 8
     FRAMES_STEP = 1
     type = 'Davis2016'
     BATCH_SIZE = 16
