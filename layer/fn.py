@@ -17,7 +17,7 @@ def hash_triplet_loss(hashset, label, device):
             for j in range(c):
                 _loss = torch.sub(torch.from_numpy(np.asarray(v)).to(device), hashset[idx + j]).abs().mean()
                 if k != l_:
-                    inter_loss = (inter_loss + 0.5 - _loss) / 2
+                    inter_loss = (inter_loss + 1 - _loss) / 2
                 if k == l_:
                     intra_loss = (intra_loss + _loss) / 2
     helper.update_hash(h_map)
