@@ -9,6 +9,7 @@ from PIL import Image, ImageFilter
 from torch.utils import data as tud
 from torch.utils.data import Dataset
 
+from layer import helper
 from layer.helper import tensor_resize, tensor2img
 from util.logUtil import logger
 
@@ -137,6 +138,9 @@ class BaseVideoDataset(Dataset, metaclass=ABCMeta):
         for f in files:
             _f = os.path.join(_dir, f)
             im = Image.open(_f)
+            if op % 3 == 1:
+                rand_compress = random.randint(65, 100)
+                _f = helper.compress(_f, rand_compress)
             if op % 2 == 1:
                 im = im.transpose(Image.FLIP_LEFT_RIGHT)
             if mask:
@@ -153,6 +157,10 @@ class BaseVideoDataset(Dataset, metaclass=ABCMeta):
                 tensor = tensor_resize(self.cfg.loader(im).unsqueeze(0), self.cfg.IMAGE_SIZE)
             tensors.append(tensor)
             im.close()
+            if op % 3 == 1:
+                if not _f.__contains__('-'):
+                    print(f'remove file:{_f}')
+                os.remove(_f)
         data = torch.cat(tensors, dim=0)
         if self.cfg.image_based:
             data = torch.squeeze(data, dim=0)

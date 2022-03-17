@@ -1,11 +1,13 @@
 import json
 import os
 import time
+import uuid
 from collections import Counter
 from datetime import datetime
 
 import numpy as np
 import torch
+from PIL import Image
 from einops import rearrange
 from torch import Tensor
 from torch.nn import functional as F
@@ -208,3 +210,16 @@ def tensor_resize(image, size=224):
 
 def img2tensor(img):
     return loader(img)
+
+
+def compress(file, quality=85):
+    '''
+    compress image
+    :param file: image file
+    :param quality: 85 or 70
+    :return: compressed image
+    '''
+    outfile = str(uuid.uuid1()) + '.jpg'
+    im = Image.open(file)
+    im.save(outfile, quality=quality)
+    return outfile
