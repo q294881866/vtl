@@ -57,9 +57,9 @@ def train(cfg, dataloader_, test_loader_):
 
     # running
     for epoch in range(cfg.EPOCH):
-        train_cache = TrainCache(size=32)
+        train_cache = TrainCache(size=8)
         _thread.start_new_thread(load_cache, (dataloader_, train_cache))
-        test_cache = TrainCache(size=4)
+        test_cache = TrainCache(size=1)
         _thread.start_new_thread(load_cache, (test_loader_, test_cache))
         while not train_cache.finished:
             if train_cache.has_item():
@@ -73,13 +73,13 @@ def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     hashes = cb2b(item.p2, device)
     loss_h, loss_d = train_h(genesis, hashes, item.p1, device)
     # epoch log
-    logger.info(f"Train Epoch:{epoch}/{idx},H Loss:{loss_h.item():.5f}, D Loss:{loss_d.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
+    logger.info(f"Train Epoch:{epoch}/{idx},Type:{genesis.cfg.HASH_BITS}, Loss:{loss_d.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
 
 
 def test_step(genesis: Genesis, idx, epoch, test_cache, device):
     if idx % 100 == 0 and test_cache.has_item():
         genesis.eval()
-        idx, item = test_cache.next_data()
+        _, item = test_cache.next_data()
         e: TrainItem = item
         fakes = cb2b(e.p3, device)
         h = genesis.h(fakes)
