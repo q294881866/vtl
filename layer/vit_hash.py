@@ -59,7 +59,7 @@ class HashAct(nn.Module):
             self.cal = torch.sign
         elif act == 'tahn':
             self.act = nn.Tanh()
-            self.cal = tensor_to_binary
+            self.cal = torch.sign
         else:
             self.act = nn.Identity()
             self.cal = tensor_to_binary
