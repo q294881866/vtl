@@ -70,6 +70,15 @@ class DataItem(object):
                 if len(files) < length_files:
                     length_files = len(files)
                     self.files = files
+        else:
+            files = sorted(os.listdir(self.fake_dir))
+            if len(files) < length_files:
+                length_files = len(files)
+                self.files = files
+            files = sorted(os.listdir(self.mask_dir))
+            if len(files) < length_files:
+                length_files = len(files)
+                self.files = files
         self.end = start + length_files
 
 
