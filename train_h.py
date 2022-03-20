@@ -1,6 +1,7 @@
 import _thread
 import argparse
 import os
+import time
 
 import numpy as np
 import torch
@@ -57,7 +58,7 @@ def train(cfg, dataloader_, test_loader_):
 
     # running
     for epoch in range(cfg.EPOCH):
-        train_cache = TrainCache(size=8)
+        train_cache = TrainCache(size=2)
         _thread.start_new_thread(load_cache, (dataloader_, train_cache))
         test_cache = TrainCache(size=1)
         _thread.start_new_thread(load_cache, (test_loader_, test_cache))
@@ -89,6 +90,7 @@ def test_step(genesis: Genesis, idx, epoch, test_cache, device):
         genesis.save(f'model/{genesis.cfg.type}_{epoch}_{idx}_')
         helper.save_hash(f'model/{genesis.cfg.type}_{epoch}_{idx}_', genesis.cfg.HASH_BITS)
         genesis.train()
+        time.sleep(10)
 
 
 def train_h(genesis: Genesis, train_data, label, device):
