@@ -171,7 +171,6 @@ def get_dataloader(dataset, cfg):
     dataloader = tud.DataLoader(dataset=dataset,
                                 num_workers=min(os.cpu_count(), cfg.BATCH_SIZE),
                                 batch_size=cfg.BATCH_SIZE, shuffle=True,
-                                pin_memory=True
                                 )
     return dataloader
 

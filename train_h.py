@@ -58,7 +58,7 @@ def train(cfg, dataloader_, test_loader_):
 
     # running
     for epoch in range(cfg.EPOCH):
-        train_cache = TrainCache(size=2)
+        train_cache = TrainCache(size=8)
         _thread.start_new_thread(load_cache, (dataloader_, train_cache))
         test_cache = TrainCache(size=1)
         _thread.start_new_thread(load_cache, (test_loader_, test_cache))
