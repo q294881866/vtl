@@ -74,7 +74,8 @@ def train_step(genesis: Genesis, item: TrainItem, idx, epoch, device):
     hashes = cb2b(item.p2, device)
     loss_h, loss_d = train_h(genesis, hashes, item.p1, device)
     # epoch log
-    logger.info(f"Train Epoch:{epoch}/{idx},Type:{genesis.cfg.HASH_BITS}, Loss:{loss_d.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
+    if idx % 20 == 0:
+        logger.info(f"Train Epoch:{epoch}/{idx},Type:{genesis.cfg.HASH_BITS}, Loss:{loss_d.item():.5f},hash dis:{helper.hash_intra_dis():.5f}")
 
 
 def test_step(genesis: Genesis, idx, epoch, test_cache, device):
