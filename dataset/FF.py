@@ -8,7 +8,8 @@ from dataset.Base import BaseVideoDataset, DataItem
 compresses = ['raw', 'c23', 'c40']
 test_listdir = ['faceshifter', 'faceswap', 'deepfakes', 'neuraltextures']
 trace_listdir = ['face2face']
-mask_listdir = ['face2face', 'faceswap', 'deepfakes', 'neuraltextures']
+# test_listdir = ['deepfakes']
+# trace_listdir = ['deepfakes']
 
 
 class FFDataset(BaseVideoDataset):
@@ -43,7 +44,7 @@ class FFDataset(BaseVideoDataset):
         if os.path.isdir(item_path):
             src_dir = os.path.join(item_path, 'src')
             fake_dir = os.path.join(item_path, 'fake')
-            mask_dir = os.path.join(item_path, 'masks')
+            mask_dir = os.path.join(item_path, 'mask')
             for item in os.listdir(src_dir):
                 src = os.path.join(src_dir, item)
                 label = item
