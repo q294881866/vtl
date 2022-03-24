@@ -6,8 +6,8 @@ import torch
 from dataset.Base import BaseVideoDataset, DataItem
 
 compresses = ['raw', 'c23', 'c40']
-trace_listdir = ['face2face', 'faceshifter', 'faceswap', 'deepfakes', 'neuraltextures']
-# trace_listdir = ['face2face']
+test_listdir = ['faceshifter', 'faceswap', 'deepfakes', 'neuraltextures']
+trace_listdir = ['face2face']
 mask_listdir = ['face2face', 'faceswap', 'deepfakes', 'neuraltextures']
 
 
@@ -38,19 +38,20 @@ class FFDataset(BaseVideoDataset):
 
     def _load_data(self):
         start = 0
+        listdir = trace_listdir if self.cfg.mode == self.cfg.TRAIN else test_listdir
         item_path = self.cfg.set_path
         if os.path.isdir(item_path):
             src_dir = os.path.join(item_path, 'src')
             fake_dir = os.path.join(item_path, 'fake')
             mask_dir = os.path.join(item_path, 'masks')
             for item in os.listdir(src_dir):
-                listdir = mask_listdir if self.mask else trace_listdir
                 src = os.path.join(src_dir, item)
                 label = item
                 fakes, masks = [], []
                 for cls in listdir:
-                    fake = os.path.join(fake_dir, cls, compresses[0], item)
-                    fakes.append(fake)
+                    for c in compresses:
+                        fake = os.path.join(fake_dir, cls, c, item)
+                        fakes.append(fake)
                     if self.mask:
                         mask = os.path.join(mask_dir, cls, item)
                         masks.append(mask)

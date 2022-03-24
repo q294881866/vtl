@@ -10,5 +10,5 @@ if __name__ == '__main__':
                 video = os.path.join(root, file)
                 out = os.path.join(output,file)
                 os.makedirs(out)
-                cmd = f'ffmpeg -i {video} {out}/%5d.jpg'
+                cmd = f'ffmpeg -i {video} -f image2 {out}/%5d.png'
                 os.system(cmd)

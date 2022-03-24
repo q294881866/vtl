@@ -108,7 +108,7 @@ def mask_iou(mask1, mask2):
     inter = ((mask1 + mask2) == 2).sum()
     m_iou = inter / (area1 + area2 - inter)
     m_iou = round(m_iou.item(), 3)
-    return 0 if math.isnan(m_iou) else m_iou
+    return 0 if math.isnan(m_iou) else mv_iou
 
 
 if __name__ == '__main__':
