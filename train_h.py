@@ -5,6 +5,7 @@ import time
 
 import numpy as np
 import torch
+import torch.multiprocessing as mp
 import torch.nn as nn
 
 from config import DFTLConfig, Davis2016Config, FFConfig, BaseConfig, SplicingConfig
@@ -18,6 +19,8 @@ from layer.fn import hash_triplet_loss
 from layer.genesis import Genesis
 from layer.helper import cb2b
 from util.logUtil import logger
+
+mp.set_sharing_strategy('file_system')
 
 # program init
 label_set = {}
@@ -59,9 +62,6 @@ def train(cfg, dataloader_, test_loader_):
     # running
     for epoch in range(cfg.EPOCH):
         train_cache = TrainCache(size=8)
-        _thread.start_new_thread(load_cache, (dataloader_, train_cache))
-        _thread.start_new_thread(load_cache, (dataloader_, train_cache))
-        _thread.start_new_thread(load_cache, (dataloader_, train_cache))
         _thread.start_new_thread(load_cache, (dataloader_, train_cache))
         test_cache = TrainCache(size=1)
         _thread.start_new_thread(load_cache, (test_loader_, test_cache))
