@@ -6,7 +6,7 @@ import torch
 from dataset.Base import BaseVideoDataset, DataItem
 
 compresses = ['raw', 'c23', 'c40']
-test_listdir = ['faceshifter', 'faceswap', 'deepfakes', 'neuraltextures']
+test_listdir = ['face2face', 'faceswap', 'deepfakes', 'neuraltextures']
 trace_listdir = ['face2face']
 # test_listdir = ['deepfakes']
 # trace_listdir = ['deepfakes']
