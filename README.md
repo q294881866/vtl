@@ -6,12 +6,14 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
 
 - [Introduction](#-introduction)
 - [ViTHash](#-vithash)
-- [Downloads](#-downloads)
-  - [DFTL Dataset Samples](#dftl-dataset-samples)
-  - [DAVIS2016-TL Dataset Samples](#davis2016-tl-dataset-samples)
 - [Train or Test](#-train-or-test)
   - [Train](#train)
   - [Test](#test)
+- [Downloads](#-downloads)
+  - [Download Models and Datasets](#download-models-and-datasets)
+  - [DFTL Dataset Samples](#dftl-dataset-samples)
+  - [DAVIS2016-TL Dataset Samples](#davis2016-tl-dataset-samples)
+  - [VSTL Dataset Samples](#vstl-dataset-samples)
 
 
 ## ✨ Introduction
@@ -24,7 +26,40 @@ In recent years, fake videos have been widely spread on the Internet with social
 </div>
 
 
+## 🔬 Train or Test
+
+### Train
+
+**Train ViTHash**
+
+```apache
+python train_h.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --hash_bits=512 --pretrained=x
+```
+
+**Train Localizator**
+
+```apache
+python train_g.py --local_rank=0 --path=../DeepFakeDetection --type=DFD --pretrained=x
+```
+
+### Test
+
+**Test ViTHash**
+
+
+```apache
+python test_h.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --hash_bits=512 --pretrained=x
+```
+
+**Test Localizator**
+
+```apache
+python test_g.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --pretrained=x
+```
+
 ## 🚀️ Downloads
+
+### Download Models and Datasets
 
 **Pretrained models, hash centers and datasets**
 
@@ -116,40 +151,5 @@ In recent years, fake videos have been widely spread on the Internet with social
         </div>
     </div>  
 </div>
-
-
-## 🔬 Train or Test
-
-### Train
-
-**Train ViTHash**
-
-```apache
-python train_h.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --hash_bits=512 --pretrained=x
-```
-
-**Train Localizator**
-
-```apache
-python train_g.py --local_rank=0 --path=../DeepFakeDetection --type=DFD --pretrained=x
-```
-
-### Test
-
-**Test ViTHash**
-
-
-```apache
-python test_h.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --hash_bits=512 --pretrained=x
-```
-
-**Test Localizator**
-
-```apache
-python test_g.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --pretrained=x
-```
-
-
-
 
 
