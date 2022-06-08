@@ -9,7 +9,7 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
 - [Train or Test](#-train-or-test)
   - [Train](#train)
   - [Test](#test)
-- [Downloads](#-downloads)
+- [Downloads](#%EF%B8%8F-downloads)
   - [Download Models and Datasets](#download-models-and-datasets)
   - [DFTL Dataset Samples](#dftl-dataset-samples)
   - [DAVIS2016-TL Dataset Samples](#davis2016-tl-dataset-samples)
