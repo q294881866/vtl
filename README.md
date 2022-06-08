@@ -2,7 +2,7 @@
 Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake Videos
 </h1>
 
-## 📜 Directory
+## 📜Directory
 
 - [Introduction](#-introduction)
 - [ViTHash](#vithash)
