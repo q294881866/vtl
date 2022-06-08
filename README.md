@@ -2,14 +2,14 @@
 Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake Videos
 </h1>
 
-## 📜Directory
+## 📜 Directory
 
 - [Introduction](#-introduction)
 - [ViTHash](#vithash)
 - [Train or Test](#-train-or-test)
   - [Train](#train)
   - [Test](#test)
-- [Downloads](#downloads)
+- [Downloads](#-downloads)
   - [Download Models and Datasets](#download-models-and-datasets)
   - [DFTL Dataset Samples](#dftl-dataset-samples)
   - [DAVIS2016-TL Dataset Samples](#davis2016-tl-dataset-samples)
@@ -58,7 +58,7 @@ python test_h.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --hash_bits=5
 python test_g.py --local_rank=0 --path=../DeepFakeDetection --type=DFD --pretrained=x
 ```
 
-## 🚀️Downloads
+## 🚀️ Downloads
 
 ### Download Models and Datasets
 
