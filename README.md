@@ -77,17 +77,17 @@ python test_g.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --pretrained=
     <div>
         <h3 align="center">Source Videos</h3>
         <div  align="center">
-            <img src="./assets/girl_r0.gif" width="240px" height="150px">
-            <img src="./assets/girl_r1.gif" width="240px" height="150px">
-            <img src="./assets/girl_r2.gif" width="240px" height="150px">
+            <img src="./assets/girl_r0.gif" width="30%">
+            <img src="./assets/girl_r1.gif" width="30%">
+            <img src="./assets/girl_r2.gif" width="30%">
         </div>
     </div>
     <div>
         <h3 align="center">Fake Videos</h3>
         <div  align="center">
-            <img src="./assets/girl_f0.gif" width="240px" height="150px">
-            <img src="./assets/girl_f1.gif" width="240px" height="150px">
-            <img src="./assets/girl_f2.gif" width="240px" height="150px">
+            <img src="./assets/girl_f0.gif" width="30%">
+            <img src="./assets/girl_f1.gif" width="30%">
+            <img src="./assets/girl_f2.gif" width="30%">
         </div>
     </div>  
 </div>
@@ -98,15 +98,15 @@ python test_g.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --pretrained=
     <div>
         <h3 align="center">Source Video</h3>
         <div  align="center">
-            <img src="./assets/40.gif" width="240px" height="150px">
+            <img src="./assets/40.gif" width="30%">
         </div>
     </div>
     <div>
         <h3 align="center">Fake Videos</h3>
         <div  align="center">
-            <img src="./assets/male-f1.gif" width="240px" height="150px">
-            <img src="./assets/male-f2.gif" width="240px" height="150px">
-            <img src="./assets/male-f3.gif" width="240px" height="150px">
+            <img src="./assets/male-f1.gif" width="30%">
+            <img src="./assets/male-f2.gif" width="30%">
+            <img src="./assets/male-f3.gif" width="30%">
         </div>
     </div>  
 </div>
@@ -117,16 +117,16 @@ python test_g.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --pretrained=
 <div align="center" >
     <div>
         <div  align="center">
-            <img src="./assets/boat.gif" width="240px" height="150px" >
-            <img src="./assets/boat_f0.gif" width="240px" height="150px" >
-            <img src="./assets/boat_f2.gif" width="240px" height="150px" >
+            <img src="./assets/boat.gif" width="30%" >
+            <img src="./assets/boat_f0.gif" width="30%" >
+            <img src="./assets/boat_f2.gif" width="30%" >
         </div>
     </div>
     <div>
         <div  align="center">
-            <img src="./assets/boat_f3.gif" width="240px" height="150px" >
-            <img src="./assets/boat_f4.gif" width="240px" height="150px" >
-            <img src="./assets/boat_f5.gif" width="240px" height="150px" >
+            <img src="./assets/boat_f3.gif" width="30%" >
+            <img src="./assets/boat_f4.gif" width="30%" >
+            <img src="./assets/boat_f5.gif" width="30%" >
         </div>
     </div>  
 </div>
@@ -138,16 +138,16 @@ python test_g.py --local_rank=0 --path=../Celeb-DF --type=Celeb-DF --pretrained=
 <div align="center" >
     <div>
         <div  align="center">
-            <img src="./assets/bird.gif" width="240px" height="150px" >
-            <img src="./assets/people.gif" width="240px" height="150px" >
-            <img src="./assets/soldier1.gif" width="240px" height="150px" >
+            <img src="./assets/bird.gif" width="30%" >
+            <img src="./assets/people.gif" width="30%" >
+            <img src="./assets/soldier1.gif" width="30%" >
         </div>
     </div>
     <div>
         <div  align="center">
-            <img src="./assets/plane2.gif" width="240px" height="150px" >
-            <img src="./assets/plane3.gif" width="240px" height="150px" >
-            <img src="./assets/plane4.gif" width="240px" height="150px" >
+            <img src="./assets/plane2.gif" width="30%" >
+            <img src="./assets/plane3.gif" width="30%" >
+            <img src="./assets/plane4.gif" width="30%" >
         </div>
     </div>  
 </div>
