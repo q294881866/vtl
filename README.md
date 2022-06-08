@@ -5,7 +5,7 @@ Vision Transformer Based Video Hashing Retrieval for Tracing the Source of Fake 
 ## 📜 Directory
 
 - [Introduction](#-introduction)
-- [ViTHash](#vithash)
+- [ViTHash](#%EF%B8%8Fvithash)
 - [Train or Test](#-train-or-test)
   - [Train](#train)
   - [Test](#test)
