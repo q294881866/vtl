@@ -212,12 +212,12 @@ def analyze_acc():
 
     params = [raw, c23, c40]
     dises = ['64bits', '128bits', '256bits', '512bits', '1024bits']
-    draw_figure('Tracing accuracy of different hash bits', dises, params, legends, x='Hash bits', y='Accuracy',
+    draw_figure('Tracing accuracy of different hash bits', dises, params, legends, x='', y='Accuracy',
                 name='compresses.png')
 
 
 def analyze_data():
-    legends = ['Original', 'Detail', 'Gaussian Blur', 'Blur', 'Median Filter', 'Cropping']
+    legends = ['None', 'Detail', 'Noise', 'Blur', 'Median', 'Crop']
     Original = [0.852, 0.932, 0.948, 0.998, 0.991]
     Detail = [0.850, 0.930, 0.949, 0.999, 0.991]
     Gaussian = [0.844, 0.937, 0.944, 0.999, 0.990]
@@ -227,12 +227,10 @@ def analyze_data():
 
     params = [Original, Detail, Gaussian, Blur, Median, Cropping]
     dises = ['64bits', '128bits', '256bits', '512bits', '1024bits']
-    draw_figure('Tracing accuracy of different image processing', dises, params, legends, x='Hash bits', y='Accuracy',
+    draw_figure('Tracing accuracy of different image processing', dises, params, legends, x='', y='Accuracy',
                 name='data.png')
 
 
 if __name__ == '__main__':
-    draw_hash_act()
-    analyze_acc()
-    draw_hash_loss()
     analyze_data()
+    analyze_acc()
