@@ -17,7 +17,7 @@ ViTHash
 
 ## ✨ Introduction
 
-Robust and Reliable Video Forgery Detection
+An effective and reliable method for forgery video detection.
 
 ## 👀️ViTHash
 
