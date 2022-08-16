@@ -1,5 +1,5 @@
 <h1 align="center">
-Robust and Reliable Video Forgery Detection
+ViTHash
 </h1>
 
 ## 📜 Directory
@@ -17,7 +17,7 @@ Robust and Reliable Video Forgery Detection
 
 ## ✨ Introduction
 
-In recent years, fake videos have been widely spread on the Internet with social hot events. Forgery detection is an effective way to avoid causing greater losses. Conventional fake video detection methods output a possible value or a suspected regions. However, such non-interpretability results are not wholly convincing. Another alternative and more effective way is to find the original video with fake video. We propose a Vision Transformer based method called ViTHash. ViTHash is used to train Hash Centers, and the Hash Centers are used to trace the source of fake videos. Specifically, traditional video retrieval usually aims to find semantic-similar videos, likeness to find videos of the same classification. Compared with traditional video retrieval, it is a challenge to trace the unique original video from all original videos, especially when there are many similar videos. We designed a novel loss called Hash Triplet Loss, to solve those problems. In addition, we designed a tool named Localizator to compare the difference between the traced original video and the fake video. Above all, we do extensive experiments on datasets: FaceForensics++, Celeb-DF and DeepFakeDetection. Our experiments show that our performance is outstanding compared to the state-of-the-art methods, especially in cross-datasets mode. Furthermore, we have done reliability experiments on our built three datasets: DAVIS2016-TL, VSTL, and DFTL. The reliability experiments shown that ViTHash is effective in different domains: video inpainting, video splicing and similar scenes.
+Robust and Reliable Video Forgery Detection
 
 ## 👀️ViTHash
 
